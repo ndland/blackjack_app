@@ -1,4 +1,10 @@
 Blackjack::Application.routes.draw do
+
+  # get "blackjack/lobby"
+
+  resources :tables
+
+  root :to => 'blackjack#lobby'
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

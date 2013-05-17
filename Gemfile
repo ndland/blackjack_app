@@ -1,7 +1,6 @@
 source 'https://rubygems.org'
 
 gem 'rails', '3.2.13'
-gem 'fabrication'
 gem 'bootstrap-sass'
 
 group :test do
@@ -12,6 +11,7 @@ end
 
 group :development, :test do
 	gem 'rspec-rails'
+	gem 'fabrication'
 end
 
 # Bundle edge Rails instead:
