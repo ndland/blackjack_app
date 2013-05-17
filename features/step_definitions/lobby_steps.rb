@@ -22,3 +22,13 @@ Then (/^I should see all of my tables$/) do
 	page.should have_link("High Roller Table")
 	page.should have_content("Min: 100")
 end
+
+Given (/^I have a user$/) do
+	Fabricate(:person, id: 1)
+end
+
+Then(/^I should see my user widget$/) do
+	page.should have_content("Bob Smith")
+	page.should have_content("Credits: 100")
+	page.should have_content("level: 1")
+end
