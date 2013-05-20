@@ -1,15 +1,15 @@
 # == Schema Information
 #
-# Table name: tables
+# Table name: game_lists
 #
 #  id         :integer          not null, primary key
-#  name       :string(255)
-#  min        :integer
-#  max        :integer
+#  user_id    :integer
+#  table      :integer
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #
 
- Fabricator(:table) do
-  min  10
+Fabricator(:game_list) do
+  user_id 1
+  table   1
 end

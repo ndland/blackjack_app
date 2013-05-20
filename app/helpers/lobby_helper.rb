@@ -6,6 +6,5 @@ module LobbyHelper
 
 	def current_game
 		
-
 	end
 end

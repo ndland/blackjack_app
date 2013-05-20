@@ -1,6 +1,7 @@
 Blackjack::Application.routes.draw do
 
-  resources :lobby,  :only => [:index] 
+  resources :lobby,		:only => [:index] 
+  resources :game,		:only => [:show]
 
   root :to => 'lobby#index'
   

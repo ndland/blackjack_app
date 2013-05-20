@@ -2,7 +2,6 @@ source 'https://rubygems.org'
 
 gem 'rails', '3.2.13'
 gem 'bootstrap-sass'
-gem 'cucumber-screenshot'
 
 group :test do
 	gem 'capybara'
@@ -13,6 +12,10 @@ end
 group :development, :test do
 	gem 'rspec-rails'
 	gem 'fabrication'
+end
+
+group :development do
+	gem 'annotate'
 end
 
 # Bundle edge Rails instead:

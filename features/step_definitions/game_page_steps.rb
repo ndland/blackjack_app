@@ -1,6 +1,6 @@
 Given (/^Beginner's table was selected on lobby page$/) do
 	visit "/"
-	click_link("Beginner's Table")
+	click_button("Beginner's Table")
 end
 
 When (/^I visit the game page$/) do

@@ -3,9 +3,15 @@
 <h1>Welcome to the Blackjack App</h1>
 
 	<h1> <% @tables.each do |each| %>
-		<a href="/game"><%= each.name %></a>
+		<%= form_for(@game_list) do |f| %>
+		<%= f.hidden_field :user_id, :value => each.id %>
+		<%= f.hidden_field :table, :value => @tables.id %>
+		<%= f.submit each.name, class: "btn" %>
+		<%end%>
+		
 		Min: <%= each.min %>
-		Max: <%= each.max %>
-		<% end %>	
-		None
+		Max: <%= each.max %>		
+	<% end %>	
+		None 
+	
 	</h1>
