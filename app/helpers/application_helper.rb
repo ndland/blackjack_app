@@ -9,11 +9,7 @@ module ApplicationHelper
 # then return string /game/id
 
 	def link_to_game(user, table)
-    user_id = user.id
-    puts user_id
-		table_id = table.id
-    puts table_id
-    example = GameList.find(:first, :conditions => { :user_id => user_id, :table_id => table_id })
-    puts example.id
+    example = GameList.find(:first, conditions: { user_id: user.id, table_id: table.id })
+    return "/game/#{example.id}"
   end
 end
