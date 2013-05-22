@@ -11,5 +11,7 @@
 #
 
  Fabricator(:table) do
+  name "Test"
+  max 100
   min  10
 end

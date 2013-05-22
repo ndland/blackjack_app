@@ -3,6 +3,6 @@ class ApplicationController < ActionController::Base
 
  	def current_user
 		
-		return Person.find(1)
+		return Person.first
 	end
 end

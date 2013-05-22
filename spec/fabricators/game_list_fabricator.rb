@@ -11,5 +11,5 @@
 
 Fabricator(:game_list) do
   user_id 1
-  table   1
+  table_id 1
 end
