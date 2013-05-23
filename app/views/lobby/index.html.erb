@@ -1,14 +1,11 @@
 <% provide(:title, 'Lobby') %>
 
 <h1>Welcome to the Blackjack App</h1>
-
-		<%= link_to "Beginner", game_path(@game_list)%>
-		<%= link_to "Intermediate", game_path(@game_list)%>
-		<%= link_to "High Roller", game_path(@game_list)%>
-	<h1> <% @tables.each do |table| %>
-		Min: <%= table.min %>
-		Max: <%= table.max %>
-		<% @forward_id %>
-	<% end %>	
-		None
-	</h1>
+<h1>
+  <% @tables.each do |table| %>
+    <%= link_to_game @user, table %>
+    Min: <%= table.min %>
+    Max: <%= table.max %>
+  <% end %>
+  None
+</h1>
