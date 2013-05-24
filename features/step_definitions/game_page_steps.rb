@@ -1,11 +1,15 @@
-Given (/^Beginner's table was selected on lobby page$/) do
-	visit "/"
-	click_button("Beginner's Table")
+Given (/^I am on a game page$/) do
+  @game = Fabricate(:game_list, table_id: 1)
+  @table = Fabricate(:table, id: 1)
+  Fabricate(:person)
+
+  visit "/game/#{@game.id}"
 end
 
-When (/^I visit the game page$/) do
-	page.should have_title("Beginner's Table")	
+When (/^I click the Lobby link$/) do
+  click_link("Lobby")
 end
 
-# Then (/^The Beginners game page should be shown$/) do
-# end
+Then (/^I should see the lobby page$/) do
+  page.should have_title("Lobby")
+end
