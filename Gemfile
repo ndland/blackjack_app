@@ -4,18 +4,19 @@ gem 'rails', '3.2.13'
 gem 'bootstrap-sass'
 
 group :test do
-	gem 'capybara'
-	gem 'cucumber-rails', :require => false
-	gem 'database_cleaner'
+  gem 'capybara'
+  gem 'cucumber-rails', :require => false
+  gem 'database_cleaner'
 end
 
 group :development, :test do
-	gem 'rspec-rails'
-	gem 'fabrication'
+  gem 'rspec-rails'
+  gem 'fabrication'
+  gem 'konacha'
 end
 
 group :development do
-	gem 'annotate'
+  gem 'annotate'
 end
 
 # Bundle edge Rails instead:

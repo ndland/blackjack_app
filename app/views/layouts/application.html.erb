@@ -8,10 +8,14 @@
  </head>
 <body>
 
-<%= @user.name %>
-<br> level: <%= @user.level %> &nbsp &nbsp Credits: 
-<%= @user.credits %>
-
+  <div class= "pull-right">
+    <div class= "well well-large"> 
+      <h4>  <i class="icon-large icon-user"> </i> &nbsp &nbsp
+      <%= @user.name %>
+      <br> level: <%= @user.level %> &nbsp &nbsp Credits: 
+      <%= @user.credits %></h4>
+  </div>
+</div>
 <%= yield %>
 
 </body>
