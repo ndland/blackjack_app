@@ -60,6 +60,7 @@ GEM
       rails (~> 3.0)
     database_cleaner (1.0.1)
     diff-lcs (1.2.4)
+    ejs (1.0.0)
     erubis (2.7.0)
     execjs (1.4.0)
       multi_json (~> 1.0)
@@ -79,6 +80,7 @@ GEM
       colorize
       railties (>= 3.1, < 5)
       sprockets
+    konacha-chai-matchers (0.1.2)
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
@@ -102,6 +104,10 @@ GEM
       activesupport (= 3.2.13)
       bundler (~> 1.0)
       railties (= 3.2.13)
+    rails-backbone (0.7.2)
+      coffee-script (~> 2.2.0)
+      ejs (~> 1.0.0)
+      railties (>= 3.1.0)
     railties (3.2.13)
       actionpack (= 3.2.13)
       activesupport (= 3.2.13)
@@ -158,8 +164,10 @@ DEPENDENCIES
   fabrication
   jquery-rails
   konacha
+  konacha-chai-matchers
   pg
   rails (= 3.2.13)
+  rails-backbone
   rspec-rails
   sass-rails (~> 3.2.3)
   uglifier (>= 1.0.3)
