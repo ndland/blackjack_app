@@ -80,6 +80,7 @@ GEM
       colorize
       railties (>= 3.1, < 5)
       sprockets
+    konacha-chai-matchers (0.1.2)
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
@@ -163,6 +164,7 @@ DEPENDENCIES
   fabrication
   jquery-rails
   konacha
+  konacha-chai-matchers
   pg
   rails (= 3.2.13)
   rails-backbone
