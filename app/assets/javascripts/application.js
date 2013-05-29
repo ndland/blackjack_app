@@ -14,6 +14,7 @@
 //= require jquery_ujs
 //= require underscore
 //= require backbone
+//= require handlebars
 //= require backbone_rails_sync
 //= require backbone_datalink
 //= require backbone/blackjack
