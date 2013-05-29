@@ -1,14 +1,15 @@
 <% provide(:title, 'Blackjack Game') %>
 <h3><%=link_to "Lobby", lobby_index_path %></h3> </br>
 <div class="page-header"> <h1> <%= @table.name %></h1></div>
-
+<section id = "game">
   <i class="icon-glass"> </i> </br> Dealer </br></br>
   <i class="icon-user"> </i>
   <%= @user.name %>
 </h3>
-
 <div class="well">
-  <div class="btn-group">
+  <input type="text" name="betInput" size="5">
+      <div class="btn-group">
     <button type="button">bet</button>
   </div>
 </div>
+</section>
