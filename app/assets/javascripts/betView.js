@@ -14,9 +14,8 @@ var BetView = Backbone.View.extend({
     'click #bet': 'makeBet'
   },
   makeBet: function() {
-   var newBet = $("#betInput").val();
+   // var newBet = $("#betInput").val();
    bet.set('value', 3);
    console.log(bet.get('value'));
   }
 });
-
