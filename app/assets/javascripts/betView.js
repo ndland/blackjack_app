@@ -11,11 +11,10 @@ var BetView = Backbone.View.extend({
   },
   el: '#game',
   events: {
-    'click #bet': 'makeBet'
+    'click #betButton': 'makeBet'
   },
   makeBet: function() {
-   // var newBet = $("#betInput").val();
-   bet.set('value', 3);
-   console.log(bet.get('value'));
+   var newBet = $("#betInput").val();
+    bet.set('value', newBet);
   }
 });
