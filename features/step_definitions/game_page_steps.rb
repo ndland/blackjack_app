@@ -19,7 +19,12 @@ Given(/^I have (\d+) credits$/) do |arg1|
 end
 
 When (/^I make a bet of (\d+)$/) do |arg1|
-  fill_in "bet",  with: arg1
+  Capybara.default_wait_time = 5;
+  puts page.body
+  # page.should have_selector(:xpath, "//input[@type='#text']")
+  find('label', :text => 'betInput')
+  # find_by_id('betInput')
+  # fill_in '#betInput', with: arg1
   click_button "bet"
 end
 
