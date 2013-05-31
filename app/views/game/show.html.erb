@@ -6,16 +6,20 @@
 <script id="game-template" type="text/x-handlebars-template">
   <i class="icon-glass"> </i> </br> Dealer </br></br>
   <i class="icon-user"> </i>
+  <label id="betLabel"></label>
+  <label id="creditsLabel"></label>
+  <%= @user.credits %>
   <%= @user.name %>
-  <label id="betLabel">{{value}}</label>
   <div class="well">
-    <input type="text" name="betInput" size="5">
+    <input type="text" id="betInput" name="betInput" size="5">
     <div class="btn-group">
-      <button type="button">bet</button>
+      <button id="betButton">bet</button>
     </div>
   </div>
 </script>
 <script>
   var view = new BetView();
   view.initialize();
+  user_credits = <%=@user.credits%>;
+    console.log(user_credits);
 </script>
