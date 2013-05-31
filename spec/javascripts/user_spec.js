@@ -1,7 +1,7 @@
 #= require application
 
 describe('Bet', function(){
-     var bet = new Bet();
+     var bet = new User();
   it ('should get a default value of 0', function() {
       expect(bet.get('value')).to.eq(0);
   });

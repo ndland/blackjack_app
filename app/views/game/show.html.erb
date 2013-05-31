@@ -8,6 +8,7 @@
   <i class="icon-user"> </i>
   <label id="betLabel"></label>
   <label id="creditsLabel"></label>
+  <label id="levelLabel"></label>
   <%= @user.credits %>
   <%= @user.name %>
   <div class="well">
@@ -18,7 +19,7 @@
   </div>
 </script>
 <script>
-  var view = new BetView();
+  var view = new userView();
   view.initialize();
   user_credits = <%=@user.credits%>;
     console.log(user_credits);
