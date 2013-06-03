@@ -1,20 +1,17 @@
-var source =$("#game-template").html();
-var User  = Backbone.Model.extend({
-  defaults: {
-    value: 0,
-    credits: 100,
-    level: 1
-  },
+// var source =$("#game-template").html();
 
-  intialize: function() {
-    console.log('hello');
-    this.on('change', function() {
-      console.log('hi');
-      if (credits === 0) {
-        this.set('credits', 100);
-      };
-    });
-  },
+var blackjack = blackjack || {};
+
+
+blackjack.User = Backbone.Model.extend({
+  urlRoot:  "/api/user/"
+  // initialize: function(){
+  //   this.on('change', function(){
+  //     // console.log(myUser.get('credits'));
+  //     var newLevel = Math.round(myUser.get('credits')/100);
+  //     if (newLevel != myUser.get('level')){
+  //       myUser.set('level', newLevel);
+  //     };
+  //   })
+  // }
 });
-
-var user = new User();

@@ -1,4 +1,5 @@
-var userView = Backbone.View.extend({
+var blackjack = blackjack || {};
+blackjack.userView = Backbone.View.extend({
   initialize: function() {
     this.render();
   },
@@ -8,9 +9,9 @@ var userView = Backbone.View.extend({
     var template = Handlebars.compile(source);
     // Load the compiled HTML into the Backbone "el"
     this.$el.html( template );
-    this.$('#betLabel').text("Bet: " + user.get('value') );
-    this.$('#creditsLabel').text("Credits " + user.get('credits') );
-    this.$('#levelLabel').text("Level " + user.get('level') );
+    // this.$('#betLabel').text("Bet: " + myUser.get('name') );
+    this.$('#creditsLabel').text("Credits: " + myUser.get('credits') );
+    this.$('#levelLabel').text("Level: " + myUser.get('level') );
   },
   el: '#game',
   events: {
@@ -35,10 +36,6 @@ var userView = Backbone.View.extend({
     var newCredits = oldCredits - newBet;
     if (newCredits === 0) {
       newCredits= 100;
-    };
-    var newLevel = Math.round(newCredits/100);
-    if (newLevel != user.get('level')){
-      user.set('level', newLevel);
     };
     user.set('credits', newCredits);
     this.render();

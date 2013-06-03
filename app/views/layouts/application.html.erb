@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title><%= yield(:title) %></title>
-  <div> <%= stylesheet_link_tag    "application", :media => "all" %>
-  <%= javascript_include_tag "application" %>
-  <%= csrf_meta_tags %> </div>
- </head>
-<body>
-
-  <div class= "pull-right">
-    <div class= "well well-large"> 
-      <h4>  <i class="icon-large icon-user"> </i> &nbsp &nbsp
-      <%= @user.name %>
-      <br> level: <%= @user.level %> &nbsp &nbsp Credits: 
-      <%= @user.credits %></h4>
-  </div>
-</div>
-<%= yield %>
-
-</body>
+  <head>
+    <title><%= yield(:title) %></title>
+    <div> <%= stylesheet_link_tag    "application", :media => "all" %>
+      <%= javascript_include_tag "application" %>
+      <%= csrf_meta_tags %> </div>
+  </head>
+  <body>
+    <div class= "pull-right">
+      <div class= "well well-large">
+        <h4>
+          <i class="icon-large icon-user"> </i> &nbsp &nbsp
+          <%= @user.name %>
+          <label id="levelLabel"></label>
+          <label id="creditsLabel"></label>
+        </h4>
+      </div>
+    </div>
+    <%= yield %>
+  </body>
 </html>

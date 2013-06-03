@@ -1,6 +1,6 @@
 Given /^I have three tables$/ do
 
-  Fabricate(:table, name: "Beginner's Table", max: 50, id: 1)
+  Fabricate(:table, name: "Beginner's Table", max: 50)
   Fabricate(:table, name: "Intermediate Table", min: 50, max: 100)
   Fabricate(:table, name: "High Roller Table", min: 100)
 
@@ -28,11 +28,11 @@ Given /^I have a user$/ do
   Fabricate(:game_list, id: 1)
 end
 
-Then /^I should see my user widget$/ do
-  page.should have_content("Bob Smith")
-  page.should have_content("Credits: 100")
-  page.should have_content("level: 1")
-end
+# Then /^I should see my user widget$/ do
+#   page.should have_content("Bob Smith")
+#   page.should have_content("Credits: 100")
+#   page.should have_content("level: 1")
+# end
 
 When /^I select the Beginner's table$/ do
   visit "/"
@@ -40,5 +40,5 @@ When /^I select the Beginner's table$/ do
 end
 
 Then /^The Beginners game page should be shown$/ do
-  current_path.should == "/game/1"
+  page.should have_content("Beginner's Table")
 end
