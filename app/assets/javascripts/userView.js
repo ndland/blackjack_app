@@ -26,10 +26,9 @@ blackjack.userView = Backbone.View.extend({
       alert("You do not have enough credits to place that bet!");
     }
     else {
-      user.set('value', newBet);
-      this.changeCredits( newBet );
+     b = new blackjack.Bet();
+     b.save();
     };
-    //this.render();
   },
   changeCredits: function( newBet ) {
     var oldCredits = user.get('credits');

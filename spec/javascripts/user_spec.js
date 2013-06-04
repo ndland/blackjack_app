@@ -1,14 +1,28 @@
 #= require application
 
-describe('Bet', function(){
-     var bet = new User();
-  it ('should get a default value of 0', function() {
-      expect(bet.get('value')).to.eq(0);
-  });
-
-  it ('should be able to set a bet', function() {
-     bet.set('value', 1);
-     expect(bet.get('value')).to.eq(1);
-  });
-});
-
+// describe('User', function(){
+// 
+//   var server;
+//   beforeEach( function() {
+//     this.server = sinon.fakeServer.create();
+//   });
+// 
+//   afterEach( function() {
+//     this.server.restore();
+//   });
+// 
+// 
+//   it ('should have a user', function() {
+//     this.server.respondWith("GET", "/api/user/",
+//                        [200, { "Content-Tyoe": "application/json"},
+//                          '{"credits":100,"id":19,"level":1,"name":"User_1"}']
+//                       );
+//    var callback = sinon.spy();
+//     var myUser = new blackjack.User( {id: 19 } );
+//     myUser.fetch( {success: function() { var view = new blackjack.userView();
+//                view.initialize();
+//     this.server.respond();
+//     }});
+//     sinon.assert.calledWith(callback, [{ id: 19, level: 1 }]);
+//   });
+// });

@@ -1,11 +1,9 @@
 class Api::BetController < ApplicationController
 
   def create
-    user= Person.find(params[:id])
-    render :json => user.to_json
-  end
-
-  def index
-    render json: ''
+    user = current_user
+    user.credits = (user.credits - params[:bet].to_i)
+    user.save
+    render :json => {}
   end
 end

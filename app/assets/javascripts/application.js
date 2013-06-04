@@ -17,6 +17,7 @@
 //= require handlebars
 //= require backbone_rails_sync
 //= require backbone_datalink
-//= require backbone/blackjack
+// require backbone/blackjack
+//= require sinon
 //= require_tree .
 

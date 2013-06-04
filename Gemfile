@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 gem 'rails', '3.2.13'
 gem 'bootstrap-sass'
 gem 'rails-backbone'
+gem 'sinon-rails'
 
 group :test do
   gem 'capybara'
