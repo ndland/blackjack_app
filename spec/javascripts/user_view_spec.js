@@ -5,7 +5,7 @@ var blackjack = blackjack || {};
 describe('Tests for Betting', function() {
   beforeEach( function() {
     $("body").append('<section id = "game"> </section>');
-    $("body").append('<script id="game-template" type="text/x-handlebars-template"> <button id="betButton">bet</button> <input type="text" id="betInput" size="5"> </script>');
+    $("body").append('<script id="game-template" type="text/x-handlebars-template"> <button id="betButton">bet</button> <input type="text" id="betInput" size="5">  </script>');
     this.server = sinon.fakeServer.create();
     this.server.autoRespond = true
   });
@@ -41,7 +41,11 @@ describe('Tests for Betting', function() {
   });
 
   it ("should call the setBetVariable function when the button is clicked", function () {
-    var view = new blackjack.userView();
+    var myGame = new blackjack.Game({id: 42});
+    var myUser = new blackjack.User({id: 19});
+    var view = new blackjack.GameView();
+    view.game = myGame;
+    view.user = myUser;
     view.initialize();
     view.setBetVariable = sinon.spy()
     view.delegateEvents()
@@ -52,11 +56,14 @@ describe('Tests for Betting', function() {
   });
 
   it ("should call the makeBet function when the setBetVariable function is executed", function() {
-    var view = new  blackjack.userView();
+    var myGame = new blackjack.Game({id: 42});
+    var betFactoryMock = sinon.mock(myGame);
+    var myUser = new blackjack.User({id: 19});
+    var view = new blackjack.GameView();
+    view.game = myGame;
+    view.user = myUser;
     view.initialize();
-    var betFactoryMock = sinon.mock(view.betFactory)
-
-    betFactoryMock.expects("makeBet").withArgs(110).once()
+    betFactoryMock.expects("makeBet").withArgs(110).once();
 
     $('#betInput').val("110");
     view.setBetVariable(callback);
@@ -71,7 +78,8 @@ describe('Tests for Betting', function() {
     this.server.respondWith("POST", "/api/game/42/bet",
                             [200, { "Content-Type": "application/json"}, '{}']
                            );
-    blackjack.BetFactory.makeBet(500, callback);
+   var myGame = new blackjack.Game({ id: 42 });
+   myGame.makeBet(500, callback);
   });
 
   it ("should set the bet amount to the web server", function(done) {
@@ -87,6 +95,7 @@ describe('Tests for Betting', function() {
                             [200, { "Content-Type": "application/json"}, '{}']
                            );
 
-    blackjack.BetFactory.makeBet(500, callback);
+    var myGame = new blackjack.Game ({id: 42});
+    myGame.makeBet(500, callback);
   });
 });

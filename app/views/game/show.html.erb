@@ -4,11 +4,19 @@
 <section id = "game">
 </section>
 <script>
+  var myGame = new blackjack.Game({id: <%= @game_list.id %>});
   var myUser = new blackjack.User({id: <%= @user.id %>});
-  myUser.fetch({success:function(){ var view = new blackjack.userView();
-      view.initialize();
-  }});
+  // myUser.fetch({success:function(){ var view = new blackjack.userView();
+  //     view.initialize();
+  // }});
+
+  var GameView = new blackjack.GameView();
+  GameView.game = myGame;
+  GameView.user = myUser;
+  GameView.initialize();
+
 </script>
+
 <script id="game-template" type="text/x-handlebars-template">
   <i class="icon-glass"> </i> </br> Dealer </br></br>
   <i class="icon-user"> </i>

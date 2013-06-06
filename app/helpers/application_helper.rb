@@ -12,7 +12,7 @@ module ApplicationHelper
 
     current_game = GameList.find(:first, conditions: { user_id: user.id, table_id: table.id })
 
-    return link_to_if(current_game.nil?, "#{table.name}", new_game_path(table: table.id)) do
+    return link_to_if( current_game.nil?, "#{table.name}", new_game_path( table: table.id )) do
       link_to table.name, game_path("#{current_game.id}")
     end
   end

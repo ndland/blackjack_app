@@ -11,3 +11,13 @@ blackjack.Bet = Backbone.Model.extend({
 blackjack.User = Backbone.Model.extend({
   urlRoot:  "/api/user/",
 });
+
+blackjack.Game = Backbone.Model.extend({
+  defaults: {
+    id: undefined
+  },
+  makeBet: function(bet, callback) {
+    var myBet = new blackjack.Bet({game_id: this.get("id"), amount: bet});
+    myBet.save(null, {success: callback});
+  }
+});
