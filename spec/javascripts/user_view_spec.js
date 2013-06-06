@@ -3,7 +3,6 @@
 var blackjack = blackjack || {};
 
 describe('Tests for Betting', function() {
-  // var server;
   beforeEach( function() {
     $("body").append('<section id = "game"> </section>');
     $("body").append('<script id="game-template" type="text/x-handlebars-template"> <button id="betButton">bet</button> <input type="text" id="betInput" size="5"> </script>');
@@ -14,7 +13,6 @@ describe('Tests for Betting', function() {
   afterEach( function() {
     this.server.restore();
   });
-
 
   it ('the User model accesses /api/user/19', function(done) {
     callback = function() {
@@ -42,17 +40,29 @@ describe('Tests for Betting', function() {
     myBet.save(null, {success: callback});
   });
 
-
-  it ("should call the makeBet function when the button is clicked", function () {
+  it ("should call the setBetVariable function when the button is clicked", function () {
     var view = new blackjack.userView();
     view.initialize();
-    view.makeBet = sinon.spy()
+    view.setBetVariable = sinon.spy()
     view.delegateEvents()
 
     $('#betButton').click();
 
-    sinon.assert.calledOnce(view.makeBet)
+    sinon.assert.calledOnce(view.setBetVariable)
   });
+
+  it ("should call the makeBet function when the setBetVariable function is executed", function() {
+    var view = new  blackjack.userView();
+    view.initialize();
+    var betFactoryMock = sinon.mock(view.betFactory)
+
+    betFactoryMock.expects("makeBet").withArgs(110).once()
+
+    $('#betInput').val("110");
+    view.setBetVariable(callback);
+
+    betFactoryMock.verify()
+   });
 
   it ("should make a call to the web server", function(done) {
     callback = function() {
@@ -61,8 +71,7 @@ describe('Tests for Betting', function() {
     this.server.respondWith("POST", "/api/game/42/bet",
                             [200, { "Content-Type": "application/json"}, '{}']
                            );
-    var view = new blackjack.userView();
-    view.makeBet(500, callback);
+    blackjack.BetFactory.makeBet(500, callback);
   });
 
   it ("should set the bet amount to the web server", function(done) {
@@ -78,14 +87,6 @@ describe('Tests for Betting', function() {
                             [200, { "Content-Type": "application/json"}, '{}']
                            );
 
-    var view = new blackjack.userView();
-    view.makeBet(500, callback);
-  });
-
-  it ("should pass the text input into the bet", function() {
-   var view = new blackjack.userView();
-   $('input').val("110");
-   $('#betButton').click();
-   expect(view.bet).to.equal(110);
+    blackjack.BetFactory.makeBet(500, callback);
   });
 });

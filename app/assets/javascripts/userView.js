@@ -1,13 +1,12 @@
 var blackjack = blackjack || {};
 blackjack.userView = Backbone.View.extend({
+  betFactory: blackjack.BetFactory,
   initialize: function() {
     this.render();
   },
   render: function() {
-    // Compile the template using Handlebarls
     var source = $("#game-template").html()
     var template = Handlebars.compile(source);
-    // Load the compiled HTML into the Backbone "el"
     this.$el.html( template );
     // this.$('#betLabel').text("Bet: " + myUser.get('name') );
     // this.$('#creditsLabel').text("Credits: " + myUser.get('credits') );
@@ -15,21 +14,11 @@ blackjack.userView = Backbone.View.extend({
   },
   el: '#game',
   events: {
-    'click #betButton': 'makeBet'
+    'click #betButton': 'setBetVariable'
   },
-    // var bet = $("#betInput").val();
-  makeBet: function(bet, callback) {
-    // var newBet = $("#betInput").val();
-    // if ( newBet < 0 ) {
-    //   alert("Bet must be positive");
-    //   this.render();
-    // } else if( newBet > user.get('credits') ) {
-    //   alert("You do not have enough credits to place that bet!");
-    // }
-    // else {
-    var myBet = new blackjack.Bet({game_id: 42, amount: bet});
-    myBet.save(null, {success: callback});
-    // };
+  setBetVariable: function(callback){
+   var bet = $('#betInput').val();
+   this.betFactory.makeBet(parseInt(bet))
   },
   changeCredits: function( newBet ) {
     var oldCredits = user.get('credits');
