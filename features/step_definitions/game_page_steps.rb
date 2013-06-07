@@ -19,7 +19,20 @@ Given(/^I have (\d+) credits$/) do |arg1|
 end
 
 When (/^I make a bet of (\d+)$/) do |arg1|
-  fill_in "app-bet-box", :with => 50 #<input id="app-bet-box">
+  find('#betInput').set arg1
+end
 
+When (/^I hit the bet button$/) do
   click_button "bet"
+end
+
+Then(/^take a screenshot$/) do
+  page.save_screenshot 'screenshot.png'
+  Launchy.open "#{Dir.pwd}/screenshot.png"
+end
+Then (/^I should have (\d+) credits left$/) do |arg1|
+  sleep 10
+
+  @user.reload
+  @user.credits.should eq(arg1.to_i)
 end

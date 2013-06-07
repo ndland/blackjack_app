@@ -4,16 +4,13 @@
 <section id = "game">
 </section>
 <script>
-  var myGame = new blackjack.Game({id: <%= @game_list.id %>});
+  var myGame = new blackjack.Game({ id: <%= @game_list.id %>});
   var myUser = new blackjack.User({id: <%= @user.id %>});
-  // myUser.fetch({success:function(){ var view = new blackjack.userView();
-  //     view.initialize();
-  // }});
-
-  var GameView = new blackjack.GameView();
-  GameView.game = myGame;
-  GameView.user = myUser;
-  GameView.initialize();
+  myUser.fetch({success:function(){ var view = new blackjack.GameView();
+    view.games = myGame;
+    view.user = myUser;
+    view.initialize();
+  }});
 
 </script>
 
@@ -23,7 +20,7 @@
   <label id="betLabel"></label>
   <label id="creditsLabel"> </label>
   <label id="levelLabel"></label>
-  <%= @user.name %>
+  <label id="userName"><%= @user.name %> </label>
   <div class="well">
     <input type="text" id="betInput" name="betInput" size="5">
     <div class="btn-group">

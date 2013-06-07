@@ -5,9 +5,12 @@ Feature: Game Page
     When I click the Lobby link
     Then I should see the lobby page
 
+  @WIP
+  @javascript
   Scenario: Making a bet
     Given I am on a game page
       And I have 100 credits
     When I make a bet of 10
-    # Then I should my bet on the table
+      And I hit the bet button
       And I should have 90 credits left
+    Then take a screenshot

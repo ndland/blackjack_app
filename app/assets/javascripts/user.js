@@ -17,7 +17,7 @@ blackjack.Game = Backbone.Model.extend({
     id: undefined
   },
   makeBet: function(bet, callback) {
-    var myBet = new blackjack.Bet({game_id: this.get("id"), amount: bet});
-    myBet.save(null, {success: callback});
+    var myBet = new blackjack.Bet({game_id: this.get("id"), bet: bet});
+    myBet.save(null, {success: callback });
   }
 });

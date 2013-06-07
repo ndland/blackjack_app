@@ -60,7 +60,7 @@ describe('Tests for Betting', function() {
     var betFactoryMock = sinon.mock(myGame);
     var myUser = new blackjack.User({id: 19});
     var view = new blackjack.GameView();
-    view.game = myGame;
+    view.games = myGame;
     view.user = myUser;
     view.initialize();
     betFactoryMock.expects("makeBet").withArgs(110).once();
@@ -87,7 +87,7 @@ describe('Tests for Betting', function() {
 
     callback = function() {
       var betElement = that.server.requests[0].requestBody;
-      expect(betElement).to.equal('{"game_id":42,"amount":500}');
+      expect(betElement).to.equal('{"game_id":42,"bet":500}');
       done();
     }
 
@@ -98,4 +98,23 @@ describe('Tests for Betting', function() {
     var myGame = new blackjack.Game ({id: 42});
     myGame.makeBet(500, callback);
   });
+
+  it ("should call for a update on the usermodel when the bet is successful", function(done) {
+    callback = function() {
+      done();
+    }
+
+    this.server.respondWith("GET", "/api/user/19",
+                            [200, { "Content-Type": "application/json"},
+                              '{"credits":100,"id":19,"level":1,"name":"User_1"}']
+                           );
+
+    var myGame = new blackjack.Game({id: 42});
+    var betFactoryMock = sinon.mock(myGame);
+    var myUser = new blackjack.User({id: 19});
+    var view = new blackjack.GameView();
+    view.games = myGame;
+    view.user = myUser;
+    view.user.fetch({success: callback});
+  })
 });
