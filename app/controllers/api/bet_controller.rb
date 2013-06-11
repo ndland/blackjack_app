@@ -5,8 +5,6 @@ class Api::BetController < ApplicationController
     user.credits = (user.credits - params[:bet].to_i)
     user.save
 
-    p "from bet controller: user has #{user.credits}"
-
     render :json => {}
   end
 end

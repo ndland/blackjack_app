@@ -25,7 +25,6 @@ end
 
 Given /^I have a user$/ do
   Fabricate(:person, id: 1)
-  Fabricate(:game_list, id: 1)
 end
 
 # Then /^I should see my user widget$/ do
@@ -36,7 +35,7 @@ end
 
 When /^I select the Beginner's table$/ do
   visit "/"
-  click_link("Beginner")
+  click_link("Beginner's Table")
 end
 
 Then /^The Beginners game page should be shown$/ do

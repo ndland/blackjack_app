@@ -31,5 +31,6 @@ describe Api::UserController do
 
       theJson.should_not have_key("created_at")
       theJson.should_not have_key("updated_at")
-
+    end
+  end
 end
