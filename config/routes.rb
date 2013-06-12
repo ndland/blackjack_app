@@ -7,6 +7,7 @@ Blackjack::Application.routes.draw do
   match '/game', to: 'game#game'
 
   namespace :api do
+      # resources :player_cards
     resources :game do
       resources :bet
       resources :player_cards
