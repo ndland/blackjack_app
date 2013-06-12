@@ -6,10 +6,12 @@
 <script>
   var myGame = new blackjack.Game({ id: <%= @game_list.id %>});
   var myUser = new blackjack.User({id: <%= @user.id %>});
-  myUser.fetch({success:function(){ var view = new blackjack.GameView();
+
+  myUser.fetch({success: function() {
+    var view = new blackjack.GameView();
     view.games = myGame;
     view.user = myUser;
-    view.initialize();
+    view.render();
   }});
 
 </script>

@@ -36,3 +36,7 @@ Then (/^I should have (\d+) credits left$/) do |arg1|
   @user.reload
   @user.credits.should eq(arg1.to_i)
 end
+
+Then(/^I should see 2 player cards$/) do
+  page.should have_content('1C 2C')
+end

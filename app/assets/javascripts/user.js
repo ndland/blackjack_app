@@ -21,3 +21,9 @@ blackjack.Game = Backbone.Model.extend({
     myBet.save(null, {success: callback });
   }
 });
+
+blackjack.PlayerCards = Backbone.Model.extend({
+  url: function() {
+    return "/api/game/" + this.get("game_id") + "/playercards";
+  }
+});
