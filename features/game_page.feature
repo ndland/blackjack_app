@@ -11,8 +11,7 @@ Feature: Game Page
       And I have 100 credits
     When I make a bet of 10
       And I hit the bet button
-      And I should have 90 credits left
-    Then take a screenshot
+    Then I should have 90 credits left
 
     @WIP
     @javascript

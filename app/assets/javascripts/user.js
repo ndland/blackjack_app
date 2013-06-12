@@ -22,8 +22,15 @@ blackjack.Game = Backbone.Model.extend({
   }
 });
 
-blackjack.PlayerCards = Backbone.Model.extend({
+blackjack.PlayerCardsModel = Backbone.Model.extend({});
+
+blackjack.PlayerCardsCollection = Backbone.Collection.extend({
+
+  model: blackjack.PlayerCardsModel,
+  id: undefined,
   url: function() {
-    return "/api/game/" + this.get("game_id") + "/playercards";
+    return "/api/game/" + this.id +"/playercards";
   }
 });
+
+

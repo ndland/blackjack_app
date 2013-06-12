@@ -21,8 +21,7 @@ describe("User Model", function() {
 
     this.server.respondWith("GET", "/api/user/19",
                             [200, { "Content-Type": "application/json"},
-                              '{"credits":100,"id":19,"level":1,"name":"User_1"}']
-                           );
+                              '{"credits":100,"id":19,"level":1,"name":"User_1"}'] );
 
     var myUser = new blackjack.User( {id: 19 } );
     myUser.fetch({success: callback});
@@ -30,9 +29,11 @@ describe("User Model", function() {
 });
 
 describe("Bet Model", function() {
+
   beforeEach( function() {
     $("body").append('<section id = "game"> </section>');
     $("body").append('<script id="game-template" type="text/x-handlebars-template"> <button id="betButton">bet</button> <input type="text" id="betInput" size="5">  </script>');
+
     this.server = sinon.fakeServer.create();
     this.server.autoRespond = true
   });
@@ -45,9 +46,9 @@ describe("Bet Model", function() {
     callback = function() {
       done();
     }
+
     this.server.respondWith("POST", "/api/game/42/bet",
-                            [200, { "Content-Type": "application/json"}, '{}']
-                           );
+                            [200, { "Content-Type": "application/json"}, '{}'] );
 
     var myBet = new blackjack.Bet({game_id: 42, amount: 300});
     myBet.save(null, {success: callback});
@@ -57,6 +58,7 @@ describe("Bet Model", function() {
     callback = function() {
       done();
     }
+
     this.server.respondWith("POST", "/api/game/42/bet",
                             [200, { "Content-Type": "application/json"}, '{}']
                            );
@@ -82,7 +84,6 @@ describe("Bet Model", function() {
   });
 });
 
-
 describe("Game View", function() {
   beforeEach( function() {
     $("body").append('<section id = "game"> </section>');
@@ -97,7 +98,7 @@ describe("Game View", function() {
     view.user = myUser;
     view.playerCardsView = {render: function(){}}
 
-    this.subject = view; // todo refactor me later and change to subject
+    this.subject = view;
   });
 
   afterEach( function() {
@@ -144,6 +145,7 @@ describe("Game View", function() {
     var myGame = new blackjack.Game({id: 42});
     var myUser = new blackjack.User({id: 19});
     var view = new blackjack.GameView();
+
     view.playerCardsView = {render: function() {}}
 
     view.playerCardsView.render = sinon.spy();
@@ -179,13 +181,14 @@ describe("PlayerCardsView", function() {
     expect(this.subject).to.exist;
   });
 
-  it ("creates a player cards model when initialized is called", function(){
+  it ("creates a player cards collection  when initialized is called", function(){
     expect(this.subject.playerCards).to.not.be.undefined;
   });
 
   it("calls the render function", function(){
     this.subject.render = sinon.spy();
     this.subject.initialize();
+
     sinon.assert.calledOnce(this.subject.render);
   });
 
@@ -221,26 +224,37 @@ describe("PlayerCardsView", function() {
     })
   });
 
+  //TODO
+
   describe("#displaying", function() {
 
-    it("gets the amount of cards", function() {
-    // setup
-    this.server.respondWith("GET", "/api/game/42/playercards",
-                            [200, { "Content-Type": "application/json"}, '{"cards": 1}']);
-    this.server = sinon.fakeServer.create();
-    this.server.autoRespond = true
-
-    var playerCards = new blackjack.PlayerCards({game_id: 42});
-
-    // invoke
-    playerCards.fetch({success: this.displayCards});
+    it("should exist", function() {
+      expect(this.subject.displayCards).to.exist;
     });
+
+    // it("should call the PlayerCardsCollection when the displayCards function is called", function() {
+    //   blackjack.PlayerCardsCollection.fetch = sinon.stub();
+
+    //   this.subject.displayCards();
+    //   this.subject.initialize();
+    //   sinon.assert.calledOnce(blackjack.PlayerCardsCollection.fetch);
+    // });
   });
 });
 
 describe("Player Cards Model", function() {
   beforeEach(function() {
-    this.subject = new blackjack.PlayerCards();
+    this.subject = new blackjack.PlayerCardsModel();
+  });
+
+  it("exists", function() {
+    expect(this.subject).to.exist;
+  });
+});
+
+describe("Player Cards Collection", function() {
+  beforeEach(function() {
+    this.subject = new blackjack.PlayerCardsCollection();
     this.server = sinon.fakeServer.create();
     this.server.autoRespond = true
   });
@@ -261,18 +275,23 @@ describe("Player Cards Model", function() {
     this.server.respondWith("GET", "/api/game/42/playercards",
                             [200, { "Content-Type": "application/json"}, '{}']);
 
-                            var playerCards = new blackjack.PlayerCards({game_id: 42});
-                            playerCards.fetch({success: callback});
+    var playerCards = new blackjack.PlayerCardsCollection;
+
+    playerCards.id = 42;
+    playerCards.fetch({success: callback});
   });
 
   it("accesses /api/game/43/playercards dynamically", function(done) {
     callback = function() {
       done();
     }
+
     this.server.respondWith("GET", "/api/game/43/playercards",
                             [200, { "Content-Type": "application/json"}, '{}']);
 
-                            var playerCards = new blackjack.PlayerCards({game_id: 43});
-                            playerCards.fetch({success: callback});
+    var playerCards = new blackjack.PlayerCardsCollection;
+
+    playerCards.id =  43;
+    playerCards.fetch({success: callback});
   });
 });
