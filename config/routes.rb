@@ -9,6 +9,7 @@ Blackjack::Application.routes.draw do
   namespace :api do
     resources :game do
       resources :bet
+      resources :player_cards
     end
     resources :user
   end

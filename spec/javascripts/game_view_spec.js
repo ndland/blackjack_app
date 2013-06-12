@@ -232,13 +232,13 @@ describe("PlayerCardsView", function() {
       expect(this.subject.displayCards).to.exist;
     });
 
-    // it("should call the PlayerCardsCollection when the displayCards function is called", function() {
-    //   blackjack.PlayerCardsCollection.fetch = sinon.stub();
+    it("should call the PlayerCardsCollection when the displayCards function is called", function() {
+      blackjack.PlayerCardsCollection.fetch = sinon.stub();
 
-    //   this.subject.displayCards();
-    //   this.subject.initialize();
-    //   sinon.assert.calledOnce(blackjack.PlayerCardsCollection.fetch);
-    // });
+      // this.subject.displayCards();
+      this.subject.initialize();
+      sinon.assert.called(blackjack.PlayerCardsCollection.fetch);
+    });
   });
 });
 
