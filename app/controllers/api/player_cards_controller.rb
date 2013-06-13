@@ -1,6 +1,6 @@
 class Api::PlayerCardsController < ApplicationController
 
-  def show
-    render json: {};
+  def index
+    render json: {card1: "c"}
   end
 end

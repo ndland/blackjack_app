@@ -9,5 +9,15 @@ describe Api::PlayerCardsController do
     it "has status code 200 for a game that exists" do
       response.status.should equal(200)
     end
+
+    it "renders the json for the cards" do
+      get :index, game_id: @game.id
+      theJson = JSON.parse(response.body);
+      theJson["card1"].should eq('c');
+    end
+
+    it "renders more than one card for the user when a successful bet is placed" do
+
+    end
   end
 end
