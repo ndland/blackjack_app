@@ -166,7 +166,7 @@ describe("Game View", function() {
     betFactoryMock.expects("makeBet").withArgs(110).once();
 
     $('#betInput').val("110");
-    view.setBetVariable(callback);
+    view.setBetVariable();
 
     betFactoryMock.verify()
   });
@@ -228,16 +228,59 @@ describe("PlayerCardsView", function() {
 
   describe("#displaying", function() {
 
-    it("should exist", function() {
+    it("cards should exist", function() {
       expect(this.subject.displayCards).to.exist;
     });
 
-    it("should call the PlayerCardsCollection when the displayCards function is called", function() {
-      blackjack.PlayerCardsCollection.fetch = sinon.stub();
+    // it("should call display card function 3 times", function() {
+    //   this.subject.playerCards = new Backbone.Collection();
+    //   this.subject.playerCards
+    //   .add ({ suite: 'c', number: 1 })
+    //   .add ({ suite: 'c', number: 1 })
+    //   .add ({ suite: 'c', number: 1 });
+    //   this.subject.displayCard = sinon.spy();
 
-      // this.subject.displayCards();
-      this.subject.initialize();
-      sinon.assert.called(blackjack.PlayerCardsCollection.fetch);
+    //   this.subject.displayCards();
+
+    //   sinon.assert.calledThrice(this.subject.displayCard);
+    // });
+
+    it("should display a card", function() {
+
+      //setup
+      $("body").append('<section id = "game"> </section>');
+      $("body").append('<script id="card-template" type="text/x-handlebars-template"><label id="suite">{{suite}}</label><label id="number">{{number}}</label></script>');
+      this.subject.playerCards = new Backbone.Collection();
+      this.subject.playerCards
+      .add ({ suite: 'c', number: 1 })
+
+      //invoke
+      this.subject.displayCards();
+
+      //expect
+      var suite = $('#suite').text();
+      assert.equal(suite , 'c');
+    });
+
+    it("should display all cards", function() {
+
+      //setup
+      $("body").append('<section id = "game"> </section>');
+      // $("body").append('<section id = "cards"> </section>');
+      $("body").append('<script id="game-template" type="text/x-handlebars-template"> </script>');
+      $("body").append('<script id="card-template" type="text/x-handlebars-template"><label id="suite"> {{suite}} </label><label id="number">{{number}}</label></script>');
+      this.subject.playerCards = new Backbone.Collection();
+      this.subject.playerCards
+      .add({ suite: 'c', number: 1 })
+      .add({ suite: 'b', number: 1 })
+      .add({ suite: 'a', number: 1 })
+
+      //invoke
+      this.subject.displayCards();
+
+      //expect
+      var suite = $('#suite').text();
+      assert.equal(suite , 'c');
     });
   });
 });
