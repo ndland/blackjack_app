@@ -248,8 +248,8 @@ describe("PlayerCardsView", function() {
     it("should display a card", function() {
 
       //setup
-      $("body").append('<section id = "game"> </section>');
-      $("body").append('<script id="card-template" type="text/x-handlebars-template"><label id="suite">{{suite}}</label><label id="number">{{number}}</label></script>');
+      $("body").append('<section id = "cards"> </section>');
+      $("body").append('<script id="card-template" type="text/x-handlebars-template">{{#each cards}} <div id="card" >{{this.number}} {{this.suite}}</div>{{/each}}</script>');
       this.subject.playerCards = new Backbone.Collection();
       this.subject.playerCards
       .add ({ suite: 'c', number: 1 })
@@ -258,17 +258,17 @@ describe("PlayerCardsView", function() {
       this.subject.displayCards();
 
       //expect
-      var suite = $('#suite').text();
-      assert.equal(suite , 'c');
+      var suite = $('#card').text();
+      assert.equal(suite , '1 c');
     });
 
     it("should display all cards", function() {
 
       //setup
-      $("body").append('<section id = "game"> </section>');
-      // $("body").append('<section id = "cards"> </section>');
-      $("body").append('<script id="game-template" type="text/x-handlebars-template"> </script>');
-      $("body").append('<script id="card-template" type="text/x-handlebars-template"><label id="suite"> {{suite}} </label><label id="number">{{number}}</label></script>');
+      $("body").append('<section id = "cards"> </section>');
+
+      $("body").append('<script id="card-template" type="text/x-handlebars-template"><label id="all">{{#each cards}} <div id="card" >{{this.number}} {{this.suite}}</div>{{/each}}</label></script>');
+
       this.subject.playerCards = new Backbone.Collection();
       this.subject.playerCards
       .add({ suite: 'c', number: 1 })
@@ -279,8 +279,8 @@ describe("PlayerCardsView", function() {
       this.subject.displayCards();
 
       //expect
-      var suite = $('#suite').text();
-      assert.equal(suite , 'c');
+      assert.equal($('#all').text(), ' 1 c 1 b 1 a');
+
     });
   });
 });
