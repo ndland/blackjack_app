@@ -1,6 +1,8 @@
 class Api::PlayerCardsController < ApplicationController
-
+FIELDS = ["suit", "faceValue"]
   def index
-    render json: [{suit: "a", faceValue: "2"}, {suit: "b", faceValue: "Q"}]
+
+    cards = PlayerCards.all
+    render :json=> cards.to_json(:only => FIELDS)
   end
 end
