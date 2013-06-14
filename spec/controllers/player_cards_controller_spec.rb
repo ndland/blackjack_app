@@ -13,11 +13,16 @@ describe Api::PlayerCardsController do
     it "renders the json for the cards" do
       get :index, game_id: @game.id
       theJson = JSON.parse(response.body);
-      theJson["card1"].should eq('c');
+      theJson[1]['suit'].should eq('b');
     end
 
     it "renders more than one card for the user when a successful bet is placed" do
-
+      get :index, game_id: @game.id
+      theJson = JSON.parse(response.body);
+      theJson[0]['suit'].should eq('a');
+      theJson[1]['suit'].should eq('b');
+      print theJson[1]['suit']
+      print theJson[1]['faceValue']
     end
   end
 end

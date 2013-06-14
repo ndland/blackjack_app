@@ -5,19 +5,19 @@ blackjack.PlayerCardsView = Backbone.View.extend({
 
   initialize: function(){
     this.playerCards = new blackjack.PlayerCardsCollection;
-    this.playerCards.id = 42;
+    this.playerCards.id = myGame.game_id;
     this.render();
   },
   render: function (){
+    that = this;
     this.playerCards.fetch({success:this.displayCards});
   },
   displayCards: function(){
-      var source = $("#card-template").html();
-      var template = Handlebars.compile(source);
+    var source = $("#card-template").html();
+    var template = Handlebars.compile(source);
+    var context = {cards: that.playerCards.toJSON()};
 
-      var context = {cards: this.playerCards.toJSON()};
-
-      $('#cards').html(template(context));
+    $('#cards').html(template(context));
 
   },
 });

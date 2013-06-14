@@ -1,6 +1,6 @@
 class Api::PlayerCardsController < ApplicationController
 
   def index
-    render json: {card1: "c"}
+    render json: [{suit: "a", faceValue: "2"}, {suit: "b", faceValue: "Q"}]
   end
 end

@@ -38,5 +38,6 @@ Then (/^I should have (\d+) credits left$/) do |arg1|
 end
 
 Then(/^I should see 2 player cards$/) do
-  page.should have_content('1C 2C')
+  page.should have_content('2 a')
+  page.should have_content('Q b')
 end

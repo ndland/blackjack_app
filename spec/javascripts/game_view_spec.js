@@ -224,7 +224,6 @@ describe("PlayerCardsView", function() {
     })
   });
 
-  //TODO
 
   describe("#displaying", function() {
 
@@ -232,55 +231,39 @@ describe("PlayerCardsView", function() {
       expect(this.subject.displayCards).to.exist;
     });
 
-    // it("should call display card function 3 times", function() {
-    //   this.subject.playerCards = new Backbone.Collection();
-    //   this.subject.playerCards
-    //   .add ({ suite: 'c', number: 1 })
-    //   .add ({ suite: 'c', number: 1 })
-    //   .add ({ suite: 'c', number: 1 });
-    //   this.subject.displayCard = sinon.spy();
-
-    //   this.subject.displayCards();
-
-    //   sinon.assert.calledThrice(this.subject.displayCard);
-    // });
-
     it("should display a card", function() {
-
       //setup
       $("body").append('<section id = "cards"> </section>');
-      $("body").append('<script id="card-template" type="text/x-handlebars-template">{{#each cards}} <div id="card" >{{this.number}} {{this.suite}}</div>{{/each}}</script>');
+      $("body").append('<script id="card-template" type="text/x-handlebars-template">{{#each cards}} <div id="card" >{{this.faceValue}} {{this.suit}}</div>{{/each}}</script>');
       this.subject.playerCards = new Backbone.Collection();
       this.subject.playerCards
-      .add ({ suite: 'c', number: 1 })
+      .add ({ suit: 'c', faceValue: 1 })
 
       //invoke
       this.subject.displayCards();
 
       //expect
-      var suite = $('#card').text();
-      assert.equal(suite , '1 c');
+      var suit = $('#card').text();
+      assert.equal(suit , '1 c');
     });
 
     it("should display all cards", function() {
-
       //setup
       $("body").append('<section id = "cards"> </section>');
 
-      $("body").append('<script id="card-template" type="text/x-handlebars-template"><label id="all">{{#each cards}} <div id="card" >{{this.number}} {{this.suite}}</div>{{/each}}</label></script>');
+      $("body").append('<script id="card-template" type="text/x-handlebars-template"><label id="all">{{#each cards}} <div id="card" >{{this.faceValue}} {{this.suit}}</div>{{/each}}</label></script>');
 
       this.subject.playerCards = new Backbone.Collection();
       this.subject.playerCards
-      .add({ suite: 'c', number: 1 })
-      .add({ suite: 'b', number: 1 })
-      .add({ suite: 'a', number: 1 })
+      .add({ suit: 'c', faceValue: 1 })
+      .add({ suit: 'b', faceValue: 1 })
+      .add({ suit: 'a', faceValue: 1 })
 
       //invoke
       this.subject.displayCards();
 
       //expect
       assert.equal($('#all').text(), ' 1 c 1 b 1 a');
-
     });
   });
 });
@@ -311,17 +294,18 @@ describe("Player Cards Collection", function() {
   });
 
   it("accesses /api/game/42/playercards", function(done) {
+
     callback = function() {
       done();
     }
 
-    this.server.respondWith("GET", "/api/game/42/playercards",
+    this.server.respondWith("GET", "/api/game/42/player_cards",
                             [200, { "Content-Type": "application/json"}, '{}']);
 
-    var playerCards = new blackjack.PlayerCardsCollection;
+    this.playerCards = new blackjack.PlayerCardsCollection;
 
-    playerCards.id = 42;
-    playerCards.fetch({success: callback});
+    this.playerCards.id = 42;
+   this.playerCards.fetch({success: callback});
   });
 
   it("accesses /api/game/43/playercards dynamically", function(done) {
@@ -329,7 +313,7 @@ describe("Player Cards Collection", function() {
       done();
     }
 
-    this.server.respondWith("GET", "/api/game/43/playercards",
+    this.server.respondWith("GET", "/api/game/43/player_cards",
                             [200, { "Content-Type": "application/json"}, '{}']);
 
     var playerCards = new blackjack.PlayerCardsCollection;
