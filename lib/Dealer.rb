@@ -4,10 +4,11 @@ class Dealer
 
   def intialize
     @deck = Deck.new
+
   end
 
   def deal_player_card
-    deck.get
-
+    newCard = deck.get
+    PlayerCards.create(suit: newCard[1], faceValue: newCard[0])
   end
 end
