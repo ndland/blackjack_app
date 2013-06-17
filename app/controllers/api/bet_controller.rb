@@ -8,7 +8,7 @@ class Api::BetController < ApplicationController
   end
 
   def create
-    2.times { dealer.deal_player_card }
+    2.times { dealer.deal_player_card(params[:game_id]) }
 
     user = current_user
     user.credits = (user.credits - params[:bet].to_i)
