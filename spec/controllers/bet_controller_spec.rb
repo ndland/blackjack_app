@@ -13,7 +13,7 @@ describe Api::BetController do
     end
 
     it "renders the game_id" do
-      subject.dealer = stub('Dealer', :deal_player_cards => nil)
+      subject.dealer = stub('Dealer', :deal_player_card => nil)
 
       post :create, :game_id => @game.id, :bet => 20
       @user.reload
@@ -26,7 +26,7 @@ describe Api::BetController do
 
     it "the dealer deals 2 new cards for a player" do
       dealerMock = mock()
-      dealerMock.expects(:deal_player_cards).returns(true).twice
+      dealerMock.expects(:deal_player_card).returns(true).twice
       subject.dealer = dealerMock
 
       post :create, :game_id => @game.id, :bet => 20
