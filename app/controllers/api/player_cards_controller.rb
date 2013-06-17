@@ -1,5 +1,7 @@
 class Api::PlayerCardsController < ApplicationController
-FIELDS = ["suit", "faceValue"]
+
+  FIELDS = ["suit", "faceValue"]
+
   def index
 
     cards = PlayerCards.all

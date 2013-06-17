@@ -6,6 +6,7 @@ gem 'rails-backbone'
 gem 'sinon-rails'
 gem 'poltergeist'
 gem 'launchy'
+gem 'mocha', :require => false
 
 group :test do
   gem 'capybara'
