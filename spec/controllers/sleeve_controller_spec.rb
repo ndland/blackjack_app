@@ -36,4 +36,30 @@ describe SleeveController do
       @card.length.should eq (6)
     end
   end
+
+  describe "getting a card" do
+    it "creates a sleeve if there isn't already a sleeve" do
+      subject.get_card
+      Sleeve.count.should eq(312);
+    end
+
+    it "returns a card" do
+      subject.create_sleeve
+      @returned_card = subject.get_card
+      @returned_card.should_not eq nil
+    end
+
+    it "changes the value of cardUsed to true" do
+      @card = subject.get_card
+      @card.cardUsed.should eq true
+    end
+
+    it "gets the first card whos cardUsed value is false" do
+      @card1 = subject.get_card
+      p @card1
+      @card2 = subject.get_card
+      p @card2
+      @card1.should_not eq @card2
+    end
+  end
 end
