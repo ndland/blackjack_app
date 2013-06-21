@@ -35,6 +35,23 @@ describe SleeveController do
       @card = Sleeve.find(:all, conditions: {suit: "H", faceValue: "A"})
       @card.length.should eq (6)
     end
+
+    it "should be shuffled" do
+      shuffle = 'not'
+      2.times{
+        subject.create_sleeve
+        @card1 = Sleeve.find(:first, conditions: { faceValue: "2" })
+        @card2 = Sleeve.find(:first, conditions: { id: ( @card1.id + 1) })
+        if @card2.faceValue != "3"
+          shuffle = 'yes'
+        end
+        if @card2.suit != @card1.suit
+          shuffle = 'yes'
+        end
+      }
+      p Sleeve.find(:all, conditions: { faceValue: "10" })
+      shuffle.should eq ('yes')
+    end
   end
 
   describe "getting a card" do
@@ -55,11 +72,22 @@ describe SleeveController do
     end
 
     it "gets the first card whos cardUsed value is false" do
-      @card1 = subject.get_card
-      p @card1
+      @sleeve = Array.new(311)
+      @sleeve.each do |card|
+        Sleeve.create(cardUsed: true)
+      end
+      @card = Fabricate(:sleeve)
       @card2 = subject.get_card
-      p @card2
-      @card1.should_not eq @card2
+      @card.suit.should eq @card2.suit
+    end
+
+    it "should create a new sleeve when all the cards are used" do
+      @sleeve = Array.new(312)
+      @sleeve.each do |card|
+        Sleeve.create(cardUsed: true)
+      end
+      @card = subject.get_card
+      @card.suit.should_not eq nil
     end
   end
 end

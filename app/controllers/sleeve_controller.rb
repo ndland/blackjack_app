@@ -3,22 +3,22 @@ class SleeveController < ApplicationController
   def create_sleeve
     Sleeve.destroy_all
 
-    ((make_full_deck * 6).flatten!).each do |card|
+    ((make_full_deck * 6).flatten!.shuffle).each do |card|
       Sleeve.create(suit: card[1] , faceValue: card[0], cardUsed: false)
     end
   end
 
   def get_card
-    if Sleeve.count != 312
+    card = Sleeve.find(:first, conditions: {cardUsed: false})
+    if card == nil
       create_sleeve
+      get_card
+    else
+      card.cardUsed = true
+      card.save
+      return card
     end
-
-    card = Sleeve[0]
-    card.cardUsed = true
-    card.save
-    return card
   end
-
   private
 
   def suit_of_cards(suit)
@@ -29,7 +29,7 @@ class SleeveController < ApplicationController
 
   def make_full_deck()
     return ["D", "S", "H", "C"].collect do |suit|
-      suit_of_cards(suit)
+    p  suit_of_cards(suit)
     end
   end
 end
