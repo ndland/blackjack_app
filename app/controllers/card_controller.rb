@@ -10,29 +10,37 @@ class CardController < ApplicationController
         }
       end
     end
+  end
 
-    shuffle
-
+  def create_cards_if_needed
+    if Card.count != 312
+      create_sleeve
+    end
   end
 
   def shuffle
+    create_cards_if_needed
+
     order = *(1..312)
     order.shuffle!
+
     Card.find_each do |card|
-     card.cardUsed = false
-     card.order = order.pop
-    card.save
+      card.cardUsed = false
+      card.order = order.pop
+      card.save
     end
   end
-  # def get_card
-  #   card = Sleeve.find(:first, conditions: {cardUsed: false})
-  #   if card == nil
-  #     create_sleeve
-  #     get_card
-  #   else
-  #     card.cardUsed = true
-  #     card.save
-  #     return card
-  #   end
-  # end
+
+  def get_card
+    card = Card.order("cards.order").find(:first, conditions: {cardUsed: false})
+
+    if card == nil
+      shuffle
+      get_card
+    else
+      card.cardUsed = true
+      card.save
+      return card
+    end
+  end
 end
