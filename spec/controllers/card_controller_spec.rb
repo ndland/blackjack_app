@@ -104,20 +104,26 @@ describe CardController do
 
     it "gets a card that hasnt been used"  do
       @sleeve = Array.new(311)
+
       @sleeve.each do |card|
         Card.create(cardUsed: true)
       end
+
       @card = Fabricate(:card)
+
       @card2 = subject.get_card
       @card.suit.should eq @card2.suit
     end
 
     it "gets the lowest ordered unused card" do
       @sleeve = Array.new(310)
+
       @sleeve.each do |card|
         Card.create(cardUsed: true)
       end
+
       Fabricate(:card, order: 9)
+
       @wantedCard = Fabricate(:card, order: 3)
       @card2 = subject.get_card
       @card2.order.should eq @wantedCard.order
@@ -126,9 +132,11 @@ describe CardController do
 
   it "should reset the sleeve when all the cards are used" do
     @sleeve = Array.new(312)
+
     @sleeve.each do |card|
       Card.create(cardUsed: true)
     end
+
     @card = subject.get_card
     @card.order.should_not eq nil
   end
