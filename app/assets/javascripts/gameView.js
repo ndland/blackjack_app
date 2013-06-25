@@ -26,7 +26,8 @@ blackjack.GameView = Backbone.View.extend({
   },
   el: '#game',
   events: {
-    'click #betButton': 'setBetVariable'
+    'click #betButton': 'setBetVariable',
+    'click #hitButton': 'hitButtonFunction'
   },
   setBetVariable: function(){
     var bet = $('#betInput').val();
@@ -34,14 +35,5 @@ blackjack.GameView = Backbone.View.extend({
     this.games.makeBet(parseInt(bet), function() {
       that.render();
     });
-  },
-  changeCredits: function( newBet ) {
-    var oldCredits = user.get('credits');
-    var newCredits = oldCredits - newBet;
-    if (newCredits === 0) {
-      newCredits= 100;
-    };
-    user.set('credits', newCredits);
-    this.render();
   }
 });

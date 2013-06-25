@@ -1,5 +1,3 @@
-// var source =$("#game-template").html();
-
 var blackjack = blackjack || {};
 
 blackjack.Bet = Backbone.Model.extend({
@@ -21,8 +19,6 @@ blackjack.Game = Backbone.Model.extend({
     myBet.save(null, {success: callback });
   }
 });
-
-// blackjack.PlayerCardsModel = Backbone.Model.extend({});
 
 blackjack.PlayerCardsCollection = Backbone.Collection.extend({
 

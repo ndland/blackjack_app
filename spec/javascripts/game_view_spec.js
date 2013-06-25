@@ -24,8 +24,8 @@ describe("User Model", function() {
                             [200, { "Content-Type": "application/json"},
                               '{"credits":100,"id":19,"level":1,"name":"User_1"}'] );
 
-    var myUser = new blackjack.User( {id: 19 } );
-    myUser.fetch({success: callback});
+                              var myUser = new blackjack.User( {id: 19 } );
+                              myUser.fetch({success: callback});
   });
 });
 
@@ -51,8 +51,8 @@ describe("Bet Model", function() {
     this.server.respondWith("POST", "/api/game/42/bet",
                             [200, { "Content-Type": "application/json"}, '{}'] );
 
-    var myBet = new blackjack.Bet({game_id: 42, amount: 300});
-    myBet.save(null, {success: callback});
+                            var myBet = new blackjack.Bet({game_id: 42, amount: 300});
+                            myBet.save(null, {success: callback});
   });
 
   it("should make a call to the web server", function(done) {
@@ -63,8 +63,8 @@ describe("Bet Model", function() {
     this.server.respondWith("POST", "/api/game/42/bet",
                             [200, { "Content-Type": "application/json"}, '{}']
                            );
-   var myGame = new blackjack.Game({ id: 42 });
-   myGame.makeBet(500, callback);
+                           var myGame = new blackjack.Game({ id: 42 });
+                           myGame.makeBet(500, callback);
   });
 
   it("should set the bet amount to the web server", function(done) {
@@ -80,15 +80,15 @@ describe("Bet Model", function() {
                             [200, { "Content-Type": "application/json"}, '{}']
                            );
 
-    var myGame = new blackjack.Game ({id: 42});
-    myGame.makeBet(500, callback);
+                           var myGame = new blackjack.Game ({id: 42});
+                           myGame.makeBet(500, callback);
   });
 });
 
 describe("Game View", function() {
   beforeEach( function() {
     $("body").append('<section id = "game"> </section>');
-    $("body").append('<script id="game-template" type="text/x-handlebars-template"> <button id="betButton">bet</button> <input type="text" id="betInput" size="5">  </script>');
+    $("body").append('<script id="game-template" type="text/x-handlebars-template"> <button id="hitButton">hit</button> <button id="betButton">bet</button> <input type="text" id="betInput" size="5">  </script>');
 
     this.server = sinon.fakeServer.create();
     this.server.autoRespond = true
@@ -130,6 +130,20 @@ describe("Game View", function() {
     sinon.assert.calledOnce(view.setBetVariable)
   });
 
+  describe("#HitButton", function() {
+    it ("should call the hitButtonfunction", function() {
+      view.games = myGame
+      view.CardsView = {render:function() {}}
+
+      view.render();
+
+      view.hitButtonFunction = sinon.spy()
+      view.delegateEvents()
+      $('#hitButton').click();
+      sinon.assert.calledOnce(view.hitButtonFunction)
+    });
+
+  });
   describe("#render", function() {
     it("should call for a update on the usermodel whenever gameView is rendered ", function() {
       //setup
@@ -322,24 +336,24 @@ describe("CardsView", function() {
       assert.equal($('#all').text(), ' 1 c 1 b 1 a');
     });
   });
-    it("should display all dealers cards", function() {
-      //setup
-      $("body").append('<section id = "dealerCards"> </section>');
+  it("should display all dealers cards", function() {
+    //setup
+    $("body").append('<section id = "dealerCards"> </section>');
 
-      $("body").append('<script id="card-template" type="text/x-handlebars-template"><label id="all">{{#each cards}} <div id="card" >{{this.faceValue}} {{this.suit}}</div>{{/each}}</label></script>');
+    $("body").append('<script id="card-template" type="text/x-handlebars-template"><label id="all">{{#each cards}} <div id="card" >{{this.faceValue}} {{this.suit}}</div>{{/each}}</label></script>');
 
-      this.subject.dealerCards = new Backbone.Collection();
-      this.subject.dealerCards
-      .add({ suit: 'c', faceValue: 1 })
-      .add({ suit: 'b', faceValue: 1 })
-      .add({ suit: 'a', faceValue: 1 })
+    this.subject.dealerCards = new Backbone.Collection();
+    this.subject.dealerCards
+    .add({ suit: 'c', faceValue: 1 })
+    .add({ suit: 'b', faceValue: 1 })
+    .add({ suit: 'a', faceValue: 1 })
 
-      //invoke
-      this.subject.displayCards();
+    //invoke
+    this.subject.displayCards();
 
-      //expect
-      assert.equal($('#all').text(), ' 1 c 1 b 1 a');
-    });
+    //expect
+    assert.equal($('#all').text(), ' 1 c 1 b 1 a');
+  });
 });
 
 describe("Player Cards Collection", function() {
@@ -366,10 +380,10 @@ describe("Player Cards Collection", function() {
     this.server.respondWith("GET", "/api/game/42/player_cards",
                             [200, { "Content-Type": "application/json"}, '{}']);
 
-    this.playerCards = new blackjack.PlayerCardsCollection;
+                            this.playerCards = new blackjack.PlayerCardsCollection;
 
-    this.playerCards.id = 42;
-   this.playerCards.fetch({success: callback});
+                            this.playerCards.id = 42;
+                            this.playerCards.fetch({success: callback});
   });
 
   it("accesses /api/game/43/playercards dynamically", function(done) {
@@ -380,10 +394,10 @@ describe("Player Cards Collection", function() {
     this.server.respondWith("GET", "/api/game/43/player_cards",
                             [200, { "Content-Type": "application/json"}, '{}']);
 
-    var playerCards = new blackjack.PlayerCardsCollection;
+                            var playerCards = new blackjack.PlayerCardsCollection;
 
-    playerCards.id =  43;
-    playerCards.fetch({success: callback});
+                            playerCards.id =  43;
+                            playerCards.fetch({success: callback});
   });
 });
 describe("Dealer Cards Collection", function() {
@@ -410,10 +424,10 @@ describe("Dealer Cards Collection", function() {
     this.server.respondWith("GET", "/api/game/42/dealer_cards",
                             [200, { "Content-Type": "application/json"}, '{}']);
 
-    this.dealerCards = new blackjack.DealerCardsCollection;
+                            this.dealerCards = new blackjack.DealerCardsCollection;
 
-    this.dealerCards.id = 42;
-   this.dealerCards.fetch({success: callback});
+                            this.dealerCards.id = 42;
+                            this.dealerCards.fetch({success: callback});
   });
 
   it("accesses /api/game/43/dealer_cards dynamically", function(done) {
@@ -424,9 +438,9 @@ describe("Dealer Cards Collection", function() {
     this.server.respondWith("GET", "/api/game/43/dealer_cards",
                             [200, { "Content-Type": "application/json"}, '{}']);
 
-    var dealerCards = new blackjack.DealerCardsCollection;
+                            var dealerCards = new blackjack.DealerCardsCollection;
 
-    dealerCards.id =  43;
-    dealerCards.fetch({success: callback});
+                            dealerCards.id =  43;
+                            dealerCards.fetch({success: callback});
   });
 });
