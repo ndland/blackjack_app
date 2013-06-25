@@ -10,4 +10,9 @@ class Dealer
     newCard = card.get_card
     PlayerCards.create(suit: newCard.suit, faceValue: newCard.faceValue, game_id: game_id)
   end
+
+  def deal_dealer_card(game_id)
+    newCard = card.get_card
+    DealerCards.create(suit: newCard.suit, faceValue: newCard.faceValue, game_id: game_id)
+  end
 end

@@ -22,13 +22,20 @@ blackjack.Game = Backbone.Model.extend({
   }
 });
 
-blackjack.PlayerCardsModel = Backbone.Model.extend({});
+// blackjack.PlayerCardsModel = Backbone.Model.extend({});
 
 blackjack.PlayerCardsCollection = Backbone.Collection.extend({
 
-  model: blackjack.PlayerCardsModel,
   id: undefined,
   url: function() {
     return "/api/game/" + this.id +"/player_cards";
+  }
+});
+
+blackjack.DealerCardsCollection = Backbone.Collection.extend({
+
+  id: undefined,
+  url: function() {
+    return "/api/game/" + this.id + "/dealer_cards";
   }
 });

@@ -8,15 +8,16 @@ Feature: Game Page
     @javascript
   Scenario: Making a bet
     Given I am on a game page
-      And I have 100 credits
+    And I have 100 credits
     When I make a bet of 10
-      And I hit the bet button
+    And I hit the bet button
     Then I should have 90 credits left
 
     @javascript
-  Scenario: Viewing a card
+  Scenario: Viewing the cards
     Given I am on a game page
-      And I have 100 credits
+    And I have 100 credits
     When I make a bet of 10
-      And I hit the bet button
-    Then I should see 2 player cards
+    And I hit the bet button
+    Then I should see 2 player cards and 2 dealer cards
+

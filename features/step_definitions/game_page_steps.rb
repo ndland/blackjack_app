@@ -2,8 +2,10 @@ Given (/^I am on a game page$/) do
   @game = Fabricate(:game_list, table_id: 1)
   @table = Fabricate(:table, id: 1)
   @user = Fabricate(:person)
-  @card1 = Fabricate(:card)
-  @card2 = Fabricate(:card)
+  @card1 = Fabricate(:card, suit: "suit1", faceValue: "faceValue1")
+  @card2 = Fabricate(:card, suit: "suit2", faceValue: "faceValue2")
+  @card3 = Fabricate(:card, suit: "suit3", faceValue: "faceValue3")
+  @card4 = Fabricate(:card, suit: "suit3", faceValue: "faceValue4")
 
   visit "/game/#{@game.id}"
 end
@@ -41,7 +43,7 @@ Then (/^I should have (\d+) credits left$/) do |arg1|
   @user.credits.should eq(arg1.to_i)
 end
 
-Then(/^I should see 2 player cards$/) do
+Then(/^I should see 2 player cards and 2 dealer cards$/) do
 
   passed = false
   x = 0
@@ -51,7 +53,7 @@ Then(/^I should see 2 player cards$/) do
       passed = true
     elsif x == 5
       p "timeout"
-      passed == true
+      passed = true
     else
       sleep 1
     end
@@ -62,4 +64,8 @@ Then(/^I should see 2 player cards$/) do
   page.should have_content(@card1.faceValue)
   page.should have_content(@card2.suit)
   page.should have_content(@card2.faceValue)
+  page.should have_content(@card3.suit)
+  page.should have_content(@card3.faceValue)
+  page.should have_content(@card4.suit)
+  page.should have_content(@card4.faceValue)
 end

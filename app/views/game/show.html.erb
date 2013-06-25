@@ -1,7 +1,11 @@
 <% provide(:title, 'Blackjack Game') %>
 <h3><%=link_to "Lobby", lobby_index_path %></h3> </br>
+<section id= "dealerCards">
+</section>
 <div class="page-header"> <h1> <%= @table.name %></h1></div>
-<section id= "cards">
+  <i class="icon-glass"> </i> </br> Dealer </br></br>
+  <i class="icon-user"> </i>
+<section id= "playerCards">
 </section>
 <section id = "game">
 </section>
@@ -21,14 +25,13 @@
 
 
 <script id="card-template" type="text/x-handlebars-template">
+  <strong>Player Cards</strong>
  {{#each cards}} <div id="card" >{{this.faceValue}} {{this.suit}}</div>{{/each}}
 </script>
 
 
 
 <script id="game-template" type="text/x-handlebars-template">
-  <i class="icon-glass"> </i> </br> Dealer </br></br>
-  <i class="icon-user"> </i>
   <label id="betLabel"></label>
   <label id="creditsLabel"> </label>
   <label id="levelLabel"></label>

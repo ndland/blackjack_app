@@ -2,10 +2,10 @@ var blackjack = blackjack || {};
 blackjack.GameView = Backbone.View.extend({
   games: undefined, // assigned from template
   user: undefined,// assigned from template
-  playerCardsView: undefined,
+  CardsView: undefined,
 
   initialize: function() {
-    this.playerCardsView = new blackjack.PlayerCardsView();
+    this.CardsView = new blackjack.CardsView();
   },
 
 
@@ -13,7 +13,8 @@ blackjack.GameView = Backbone.View.extend({
     var source = $("#game-template").html();
     var template = Handlebars.compile(source);
     this.$el.html( template );
-    this.playerCardsView.render(this.games.id);
+    this.CardsView.render(this.games.id);
+
 
     if (typeof this.user != 'undefined'){
       var that = this;
