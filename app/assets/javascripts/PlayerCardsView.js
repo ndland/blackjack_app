@@ -8,7 +8,8 @@ blackjack.PlayerCardsView = Backbone.View.extend({
     this.playerCards.id = myGame.game_id;
     this.render();
   },
-  render: function (){
+  render: function (id){
+    this.playerCards.id = id;
     that = this;
     this.playerCards.fetch({success:this.displayCards});
   },

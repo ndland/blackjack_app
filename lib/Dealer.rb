@@ -8,7 +8,6 @@ class Dealer
 
   def deal_player_card(game_id)
     newCard = card.get_card
-    p Card
     PlayerCards.create(suit: newCard.suit, faceValue: newCard.faceValue, game_id: game_id)
   end
 end

@@ -2,6 +2,8 @@ Given (/^I am on a game page$/) do
   @game = Fabricate(:game_list, table_id: 1)
   @table = Fabricate(:table, id: 1)
   @user = Fabricate(:person)
+  @card1 = Fabricate(:card)
+  @card2 = Fabricate(:card)
 
   visit "/game/#{@game.id}"
 end
@@ -19,7 +21,7 @@ Given(/^I have (\d+) credits$/) do |arg1|
 end
 
 When (/^I make a bet of (\d+)$/) do |arg1|
-  find('#betInput').set arg1
+  find('#betInput').set(arg1)
 end
 
 When (/^I hit the bet button$/) do
@@ -30,14 +32,34 @@ Then(/^take a screenshot$/) do
   page.save_screenshot 'screenshot.png'
   Launchy.open "#{Dir.pwd}/screenshot.png"
 end
+
+
 Then (/^I should have (\d+) credits left$/) do |arg1|
-  sleep 10
+  sleep 3
 
   @user.reload
   @user.credits.should eq(arg1.to_i)
 end
 
 Then(/^I should see 2 player cards$/) do
-  page.should have_content('2 a')
-  page.should have_content('Q b')
+
+  passed = false
+  x = 0
+
+  until passed do
+    if PlayerCards.count == 2
+      passed = true
+    elsif x == 5
+      p "timeout"
+      passed == true
+    else
+      sleep 1
+    end
+    x += 1
+  end
+
+  page.should have_content(@card1.suit)
+  page.should have_content(@card1.faceValue)
+  page.should have_content(@card2.suit)
+  page.should have_content(@card2.faceValue)
 end

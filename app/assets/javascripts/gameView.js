@@ -13,13 +13,13 @@ blackjack.GameView = Backbone.View.extend({
     var source = $("#game-template").html();
     var template = Handlebars.compile(source);
     this.$el.html( template );
-    this.playerCardsView.render();
+    this.playerCardsView.render(this.games.id);
 
     if (typeof this.user != 'undefined'){
       var that = this;
       this.user.fetch({success: function(){
-        that.$('#userName').text(that.user.get('name') ); // ???
-        that.$('#creditsLabel').text("Credits: " + that.user.get('credits') ); // ????
+        that.$('#userName').text(that.user.get('name') );
+        that.$('#creditsLabel').text("Credits: " + that.user.get('credits') );
       }});
     }
   },

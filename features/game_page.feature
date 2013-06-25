@@ -13,7 +13,6 @@ Feature: Game Page
       And I hit the bet button
     Then I should have 90 credits left
 
-    @WIP
     @javascript
   Scenario: Viewing a card
     Given I am on a game page

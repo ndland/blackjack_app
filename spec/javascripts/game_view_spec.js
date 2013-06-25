@@ -116,6 +116,7 @@ describe("Game View", function() {
   });
 
   it("should call the setBetVariable function when the button is clicked", function () {
+    view.games = myGame
     view.playerCardsView = {render: function() {}}
 
     view.render();
@@ -134,6 +135,7 @@ describe("Game View", function() {
       this.subject.user.fetch = sinon.spy()
 
       //invoke
+      view.games = myGame
       view.render();
 
       //expectations
@@ -146,6 +148,7 @@ describe("Game View", function() {
     var myUser = new blackjack.User({id: 19});
     var view = new blackjack.GameView();
 
+    view.games = myGame
     view.playerCardsView = {render: function() {}}
 
     view.playerCardsView.render = sinon.spy();

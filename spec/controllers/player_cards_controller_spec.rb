@@ -4,8 +4,8 @@ describe Api::PlayerCardsController do
   describe "#show" do
     before do
       @game = Fabricate(:game_list)
-      @player_cards1 = Fabricate(:player_cards)
-      @player_cards2 = Fabricate(:player_cards)
+      @player_cards1 = Fabricate(:player_cards, game_id: @game.id)
+      @player_cards2 = Fabricate(:player_cards, game_id: @game.id)
     end
 
     it "has status code 200 for a game that exists" do
@@ -36,6 +36,14 @@ describe Api::PlayerCardsController do
 
       theJson[0].should_not have_key("created_at");
       theJson[0].should_not have_key("updated_at");
+    end
+
+    it "only renders the cards that are for that certain game" do
+      @player_cards = Fabricate(:player_cards)
+      get :index, game_id: @game.id
+      theJson = JSON.parse(response.body)
+      theJson[2].should_not be
+      theJson[0].should be
     end
   end
 end

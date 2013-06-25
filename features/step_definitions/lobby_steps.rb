@@ -1,6 +1,4 @@
-Given /^I have three tables$/ do
-
-  Fabricate(:table, name: "Beginner's Table", max: 50)
+Given /^I have three tables$/ do Fabricate(:table, name: "Beginner's Table", max: 50)
   Fabricate(:table, name: "Intermediate Table", min: 50, max: 100)
   Fabricate(:table, name: "High Roller Table", min: 100)
 
@@ -12,8 +10,9 @@ When /^I visit the lobby page$/ do
   visit "/"
   page.should have_title('Lobby')
 end
+
 Then /^I should see all of my tables$/ do
-  page.should have_link("Beginner")
+  page.should have_link("Beginner's")
   page.should have_content("Min: 10")
   page.should have_content("Max: 50")
   page.should have_link("Intermediate")
@@ -24,7 +23,8 @@ Then /^I should see all of my tables$/ do
 end
 
 Given /^I have a user$/ do
-  Fabricate(:person, id: 1)
+  # Fabricate(:person, id: 1)
+  Fabricate(:person)
 end
 
 # Then /^I should see my user widget$/ do
