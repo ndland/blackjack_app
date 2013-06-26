@@ -40,6 +40,9 @@ blackjack.GameView = Backbone.View.extend({
   },
 
   hitButtonFunction: function() {
-    this.games.gameHit({success:this.render()});
+    var that = this;
+    this.games.gameHit(function() {
+                      that.render();
+    });
   }
 });

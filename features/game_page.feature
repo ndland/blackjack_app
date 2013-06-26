@@ -21,3 +21,9 @@ Feature: Game Page
     And I hit the bet button
     Then I should see 2 player cards and 2 dealer cards
 
+    @javascript
+  Scenario: Player Hitting
+    Given I am on a game page
+    And I have already placed a bet
+    When I hit the Hit button
+    Then I should see 3 player cards and 2 dealer cards

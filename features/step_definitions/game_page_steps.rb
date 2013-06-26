@@ -27,7 +27,7 @@ When (/^I make a bet of (\d+)$/) do |arg1|
 end
 
 When (/^I hit the bet button$/) do
-  click_button "bet"
+  click_button "Bet"
 end
 
 Then(/^take a screenshot$/) do
@@ -68,4 +68,19 @@ Then(/^I should see 2 player cards and 2 dealer cards$/) do
   page.should have_content(@card3.faceValue)
   page.should have_content(@card4.suit)
   page.should have_content(@card4.faceValue)
+end
+
+Given (/^I have already placed a bet$/) do
+  step "I have 100 credits"
+  step "I make a bet of 10"
+  step "I hit the bet button"
+  @card5 = Fabricate(:card)
+end
+
+When (/^I hit the Hit button$/) do
+  click_button "Hit"
+end
+
+Then (/^I should see 3 player cards and 2 dealer cards$/) do
+  page.should have_content(@card5.suit)
 end
