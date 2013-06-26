@@ -25,15 +25,21 @@ blackjack.GameView = Backbone.View.extend({
     }
   },
   el: '#game',
+
   events: {
     'click #betButton': 'setBetVariable',
     'click #hitButton': 'hitButtonFunction'
   },
+
   setBetVariable: function(){
     var bet = $('#betInput').val();
     var that = this;
     this.games.makeBet(parseInt(bet), function() {
       that.render();
     });
+  },
+
+  hitButtonFunction: function() {
+    this.games.gameHit({success:this.render()});
   }
 });
