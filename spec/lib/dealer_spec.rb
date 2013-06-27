@@ -66,6 +66,7 @@ describe Dealer do
   end
 
   describe "the dealer playing" do
+
     before do
       @card = Fabricate(:dealer_cards, faceValue:"A", game_id: 42)
       @card1 = Fabricate(:dealer_cards, faceValue:"2", suit: "int", game_id: 42)
@@ -79,8 +80,65 @@ describe Dealer do
       subject.play(42)
     end
 
-    describe "adding up the faceValue_total of the hand" do
+    it "should get another card if hands total is less then 17" do
+      @card6 = Fabricate(:dealer_cards, faceValue:"K", game_id: 4)
+      @card7 = Fabricate(:dealer_cards, faceValue:"5", game_id: 4)
 
+      subject.play(4)
+      @cards  = DealerCards.find(:all, conditions:{game_id: 4});
+      subject.faceValue_total(@cards).should_not eq(15)
+    end
+
+    it "should continue to get another card if the total is less then 17" do
+      @card6 = Fabricate(:dealer_cards, faceValue:"Q", game_id: 4)
+      @card7 = Fabricate(:dealer_cards, faceValue:"3", game_id: 4)
+      cardMock = mock()
+      cardMock.expects(:get_card).returns(@card1).twice
+      subject.card = cardMock
+
+      subject.play(4)
+    end
+
+    it "should have a method find_winner" do
+      @card6 = Fabricate(:player_cards, faceValue:"Q", game_id: 42)
+      @card7 = Fabricate(:player_cards, faceValue:"3", game_id: 42)
+      subject.find_winner(42)
+    end
+
+    it "player wins if players card value is 17 and dealers card value is 15" do
+      Fabricate(:player_cards, faceValue: "K", game_id: 7)
+      Fabricate(:player_cards, faceValue: "7", game_id: 7)
+      Fabricate(:dealer_cards, faceValue: "K", game_id: 7)
+      Fabricate(:dealer_cards, faceValue: "5", game_id: 7)
+      subject.find_winner(7).should eq("Player")
+    end
+
+    it "dealer wins if players card value is 17 and dealers card value is 19" do
+      Fabricate(:player_cards, faceValue: "K", game_id: 7)
+      Fabricate(:player_cards, faceValue: "7", game_id: 7)
+      Fabricate(:dealer_cards, faceValue: "K", game_id: 7)
+      Fabricate(:dealer_cards, faceValue: "9", game_id: 7)
+      subject.find_winner(7).should eq("Dealer")
+    end
+
+    it "player wins if players cards value is 17 and dealers cards are 22" do
+      Fabricate(:player_cards, faceValue: "K", game_id: 7)
+      Fabricate(:player_cards, faceValue: "7", game_id: 7)
+      Fabricate(:dealer_cards, faceValue: "K", game_id: 7)
+      Fabricate(:dealer_cards, faceValue: "K", game_id: 7)
+      Fabricate(:dealer_cards, faceValue: "2", game_id: 7)
+      subject.find_winner(7).should eq("Player")
+    end
+
+    it "returns 'No Winner' if the player and the dealer have the same score" do
+      Fabricate(:player_cards, faceValue: "K", game_id: 7)
+      Fabricate(:player_cards, faceValue: "7", game_id: 7)
+      Fabricate(:dealer_cards, faceValue: "K", game_id: 7)
+      Fabricate(:dealer_cards, faceValue: "7", game_id: 7)
+      subject.find_winner(7).should eq("No Winner: game was a push")
+    end
+
+    describe "adding up the faceValue_total of the hand" do
       it "should have a method faceValue_total(cards)" do
         @cards  = DealerCards.find(:all, conditions:{game_id: 42});
         subject.faceValue_total(@cards)

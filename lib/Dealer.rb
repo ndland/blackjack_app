@@ -17,8 +17,12 @@ class Dealer
   end
 
   def play(game_id)
-    @cards  = DealerCards.find(:all, conditions:{game_id: game_id});
-    faceValue_total(@cards)
+    @cards  = DealerCards.find(:all, conditions:{game_id: game_id})
+
+    if faceValue_total(@cards) < 17
+      deal_dealer_card(game_id)
+      play(game_id)
+    end
   end
 
   def faceValue_card(card)
@@ -42,5 +46,28 @@ class Dealer
     end
 
     return  total
+  end
+
+  def find_winner(game_id)
+    @player_cards = PlayerCards.find(:all, conditions:{game_id: game_id})
+    @dealer_cards = DealerCards.find(:all, conditions:{game_id: game_id})
+
+    @player_cards_total = over21?(faceValue_total(@player_cards))
+    @dealer_cards_total = over21?(faceValue_total(@dealer_cards))
+
+    if @player_cards_total > @dealer_cards_total
+      return "Player"
+    elsif @player_cards_total == @dealer_cards_total
+      return "No Winner: game was a push"
+    else
+      return "Dealer"
+    end
+  end
+
+  def over21? (cardTotal)
+    if cardTotal > 21
+      cardTotal = 0
+    end
+    return cardTotal
   end
 end
