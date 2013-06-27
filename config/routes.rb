@@ -10,6 +10,7 @@ Blackjack::Application.routes.draw do
     resources :game do
       resources :bet
       resources :hit
+      resources :stand
       resources :player_cards
       resources :dealer_cards
     end

@@ -84,3 +84,11 @@ end
 Then (/^I should see 3 player cards and 2 dealer cards$/) do
   page.should have_content(@card5.suit)
 end
+
+When (/^I hit the Stand button$/) do
+  click_button "Stand"
+end
+
+Then (/^I should see the outcome of the game$/) do
+  page.should have_content("WIN")
+end

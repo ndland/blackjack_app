@@ -28,7 +28,60 @@ describe("User Model", function() {
                               myUser.fetch({success: callback});
   });
 });
+describe ("Stand Model", function() {
 
+  beforeEach( function() {
+    this.server = sinon.fakeServer.create();
+    this.server.autoRespond = true
+  });
+
+  afterEach( function() {
+    this.server.restore();
+  });
+
+  it("exists", function() {
+    var myStand = new blackjack.Stand();
+  });
+
+  it("accesses /api/game/42/stand", function(done) {
+    callback = function() {
+      done();
+    }
+
+    this.server.respondWith("POST", "/api/game/42/stand",
+                            [200, { "Content-Type": "application/json"}, '{}'] );
+
+                            var myStand = new blackjack.Stand({game_id: 42});
+                            myStand.save(null, {success: callback});
+  });
+
+  it("should make a call to the web server through gameStand", function(done) {
+    callback = function() {
+      done();
+    }
+
+    this.server.respondWith("POST", "/api/game/42/stand",
+                            [200, { "Content-Type": "application/json"}, '{}']
+                           );
+                           var myGame = new blackjack.Game({ id: 42 });
+                           myGame.gameStand(callback);
+  });
+
+  it("should set the game id", function(done) {
+    var that = this;
+
+    callback = function() {
+      var game_id = that.server.requests[0].requestBody;
+      expect(game_id).to.equal('{"game_id":43}');
+      done();
+    }
+    this.server.respondWith("POST", "/api/game/43/stand",
+                            [200, { "Content-Type": "application/json"}, '{}']
+                           );
+                           var myGame = new blackjack.Game({ id: 43 });
+                           myGame.gameStand(callback);
+  });
+});
 describe ("Hit Model", function() {
 
   beforeEach( function() {
@@ -143,7 +196,7 @@ describe("Bet Model", function() {
 describe("Game View", function() {
   beforeEach( function() {
     $("body").append('<section id = "game"> </section>');
-    $("body").append('<script id="game-template" type="text/x-handlebars-template"> <button id="hitButton">hit</button> <button id="betButton">bet</button> <input type="text" id="betInput" size="5">  </script>');
+    $("body").append('<script id="game-template" type="text/x-handlebars-template"><buton id="standButton">stand</button> <button id="hitButton">hit</button> <button id="betButton">bet</button> <input type="text" id="betInput" size="5">  </script>');
 
     this.server = sinon.fakeServer.create();
     this.server.autoRespond = true
@@ -185,6 +238,35 @@ describe("Game View", function() {
     sinon.assert.calledOnce(view.setBetVariable)
   });
 
+  describe("#StandButton", function(){
+    it ("should call the standButtonfunction", function() {
+      view.games = myGame
+      view.CardsView = {render:function() {}}
+
+      view.render();
+
+      view.standButtonFunction = sinon.spy();
+      view.delegateEvents();
+      $('#standButton').click();
+      sinon.assert.calledOnce(view.standButtonFunction);
+    });
+
+    it("should call the gameStand function when the standButtonFunction is executed", function() {
+      var myGame = new blackjack.Game({id: 42});
+      var standFactoryMock = sinon.mock(myGame);
+      var myUser = new blackjack.User({id: 19});
+      var view = new blackjack.GameView();
+      view.games = myGame;
+      view.user = myUser;
+      view.CardsView = {render: function() {}}
+      view.render();
+      standFactoryMock.expects("gameStand").once();
+      view.standButtonFunction();
+
+      standFactoryMock.verify();
+    });
+  });
+
   describe("#HitButton", function() {
     it ("should call the hitButtonfunction", function() {
       view.games = myGame
@@ -213,22 +295,23 @@ describe("Game View", function() {
       hitFactoryMock.verify();
     });
 
-   it("hitButtonFunction re-renders the page once it gets a callback", function(){
-      var myGame = new blackjack.Game({id: 42});
-      var myUser = new blackjack.User({id: 19});
-      var view = new blackjack.GameView();
-      view.games = myGame;
-      view.user = myUser;
-      view.games.gameHit = sinon.stub().returns(null);
-      view.render = sinon.spy()
+    //TODO - ask tony
+   // it("hitButtonFunction re-renders the page once it gets a callback", function(){
+   //    var myGame = new blackjack.Game({id: 42});
+   //    var myUser = new blackjack.User({id: 19});
+   //    var view = new blackjack.GameView();
+   //    view.games = myGame;
+   //    view.user = myUser;
+   //    view.games.gameHit = sinon.stub().returns();
+   //    view.render = sinon.spy()
 
-      //invoke
-      view.hitButtonFunction();
+   //    //invoke
+   //    view.hitButtonFunction();
 
 
-      //expect
-      sinon.assert.calledOnce(view.render);
-   });
+   //    //expect
+   //    sinon.assert.calledOnce(view.render);
+   // });
   });
 
   describe("#render", function() {

@@ -28,7 +28,8 @@ blackjack.GameView = Backbone.View.extend({
 
   events: {
     'click #betButton': 'setBetVariable',
-    'click #hitButton': 'hitButtonFunction'
+    'click #hitButton': 'hitButtonFunction',
+    'click #standButton': 'standButtonFunction'
   },
 
   setBetVariable: function(){
@@ -42,7 +43,14 @@ blackjack.GameView = Backbone.View.extend({
   hitButtonFunction: function() {
     var that = this;
     this.games.gameHit(function() {
-                      that.render();
+      that.render();
+    });
+  },
+
+  standButtonFunction: function() {
+    var that = this;
+    this.games.gameStand(function() {
+      that.render();
     });
   }
 });
