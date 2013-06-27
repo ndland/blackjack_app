@@ -21,28 +21,26 @@ class Dealer
     faceValue_total(@cards)
   end
 
-  def faceValue_total(cards)
-    i = 0
-    total = 0
-    number_of_aces = 0
-
-    until i == cards.count
-
-      if (2..9) === cards[i].faceValue.to_i
-        total += cards[i].faceValue.to_i
-
-      elsif cards[i].faceValue == "A"
-        number_of_aces += 1
-        total += 1
-      else
-        total+= 10
-      end
-      i += 1
+  def faceValue_card(card)
+    case card.faceValue
+    when 'A'
+      1
+    when '0'..'9'
+      card.faceValue.to_i
+    else
+      10
     end
+  end
 
-    if number_of_aces != 0 and total < 12
+  def faceValue_total(cards)
+    total = cards.
+      map{|card| faceValue_card(card) }.
+      inject(:+)
+
+    if total < 12  and cards.map(&:faceValue).include?("A")
       total += 10
     end
-    return total
+
+    return  total
   end
 end

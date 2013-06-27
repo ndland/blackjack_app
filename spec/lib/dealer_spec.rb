@@ -75,16 +75,16 @@ describe Dealer do
       @card5 = Fabricate(:dealer_cards, faceValue:"K", game_id: 42)
     end
 
-    # it "should have a method play" do
-    #   subject.play(42)
-    # end
+    it "should have a method play" do
+      subject.play(42)
+    end
 
     describe "adding up the faceValue_total of the hand" do
 
-      # it "should have a method faceValue_total(cards)" do
-      #   @cards  = DealerCards.find(:all, conditions:{game_id: 42});
-      #   subject.faceValue_total(@cards)
-      # end
+      it "should have a method faceValue_total(cards)" do
+        @cards  = DealerCards.find(:all, conditions:{game_id: 42});
+        subject.faceValue_total(@cards)
+      end
 
       it "should return the value of 2" do
         @cards  = DealerCards.find(:all, conditions:{faceValue: "2"});
@@ -120,11 +120,6 @@ describe Dealer do
         @cards  = DealerCards.find(:all, conditions:{game_id: 42});
         subject.faceValue_total(@cards).should eq(36)
       end
-
-      # it "uses the cards from PlayerCards to determine the total value" do
-      #   @cards  = DealerCards.find(:all, conditions:{game_id: 42});
-      #   subject.faceValue_total(@cards).should eq(15)
-      # end
     end
   end
 end
