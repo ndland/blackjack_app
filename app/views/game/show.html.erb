@@ -1,6 +1,7 @@
 <% provide(:title, 'Blackjack Game') %>
 <h3><%=link_to "Lobby", lobby_index_path %></h3> </br>
 <div class="page-header"> <h1> <%= @table.name %></h1></div>
+<section id= "winner"> </section>
 <section id= "dealerCards">
 </section>
   <strong>Dealer</strong>
@@ -44,4 +45,7 @@
       <button id="standButton">Stand</button>
     </div>
   </div>
+</script>
+<script id="winner-template" type="text/x-handlebars-template">
+  <div id="winner">{{this.outcome}}</div>
 </script>

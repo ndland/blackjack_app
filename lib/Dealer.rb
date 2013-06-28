@@ -64,6 +64,7 @@ class Dealer
     end
   end
 
+  # TODO make sure that this function is tested
   def over21? (cardTotal)
     if cardTotal > 21
       cardTotal = 0

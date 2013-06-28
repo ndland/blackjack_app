@@ -28,6 +28,7 @@ describe("User Model", function() {
                               myUser.fetch({success: callback});
   });
 });
+
 describe ("Stand Model", function() {
 
   beforeEach( function() {
@@ -82,6 +83,7 @@ describe ("Stand Model", function() {
                            myGame.gameStand(callback);
   });
 });
+
 describe ("Hit Model", function() {
 
   beforeEach( function() {
@@ -193,6 +195,49 @@ describe("Bet Model", function() {
   });
 });
 
+describe("Winner Model", function() {
+
+  beforeEach( function() {
+    this.subject = new blackjack.Winner();
+    this.server = sinon.fakeServer.create();
+    this.server.autoRespond = true
+  });
+
+  afterEach( function() {
+    this.server.restore();
+  });
+
+  it("exists", function() {
+    var winner = new blackjack.Winner();
+  });
+
+  it("accesses /api/game/42/winner", function(done) {
+    callback = function() {
+      done();
+    }
+
+    this.server.respondWith("GET", "/api/game/42/winner",
+                            [200, { "Content-Type": "application/json"}, '{}']
+                           );
+                           this.winner = new blackjack.Winner;
+                           this.winner.id = 42;
+                           this.winner.fetch({success: callback});
+  });
+
+  it("accesses /api/game/21/winner", function(done) {
+    callback = function() {
+      done();
+    }
+
+    this.server.respondWith("GET", "/api/game/21/winner",
+                            [200, { "Content-Type": "application/json"}, '{}']
+                           );
+                           this.winner = new blackjack.Winner;
+                           this.winner.id = 21;
+                           this.winner.fetch({success: callback});
+  });
+});
+
 describe("Game View", function() {
   beforeEach( function() {
     $("body").append('<section id = "game"> </section>');
@@ -206,12 +251,23 @@ describe("Game View", function() {
     view = new blackjack.GameView();
     view.user = myUser;
     view.CardsView = {render: function(){}}
+    view.WinnersView = {render: function(){}}
 
     this.subject = view;
   });
 
   afterEach( function() {
     this.server.restore();
+  });
+
+  it("initializes the winners view", function() {
+    var newGameView = new blackjack.GameView();
+    expect(newGameView.WinnersView).to.exist
+  });
+
+  it("initializes the winnersView to a blackjack.WinnersView", function() {
+    var newGameView = new blackjack.GameView();
+    expect(newGameView.WinnersView).to.be.instanceOf(blackjack.WinnersView);
   });
 
   it("initializes the players card view", function () {
@@ -236,6 +292,96 @@ describe("Game View", function() {
     $('#betButton').click();
 
     sinon.assert.calledOnce(view.setBetVariable)
+  });
+
+  describe("#render", function() {
+    it("should call for a update on the usermodel whenever gameView is rendered", function() {
+      //setup
+      this.subject.user.fetch = sinon.spy()
+
+      //invoke
+      view.games = myGame
+      view.render();
+
+      //expectations
+      sinon.assert.calledOnce(this.subject.user.fetch)
+    });
+
+    it("should render the player cards", function() {
+      var myGame = new blackjack.Game({id: 42});
+      var myUser = new blackjack.User({id: 19});
+      var view = new blackjack.GameView();
+
+      view.games = myGame
+      view.CardsView = {render: function() {}}
+
+      view.CardsView.render = sinon.spy();
+      view.render();
+
+      sinon.assert.calledOnce(view.CardsView.render)
+    });
+
+    it("should pass the game id to the player cards", function() {
+      var myGame = new blackjack.Game({id: 42});
+      var myUser = new blackjack.User({id: 19});
+      var view = new blackjack.GameView();
+
+      view.games = myGame
+      view.CardsView = {render: function() {}}
+
+      view.CardsView.render = sinon.spy();
+      view.render();
+
+      assert(view.CardsView.render.calledWith(view.games.id))
+    });
+
+    it("should render the winners view", function() {
+      var myGame = new blackjack.Game({id: 42});
+      var myUser = new blackjack.User({id: 19});
+      var view = new blackjack.GameView();
+
+      view.games = myGame
+      view.CardsView = {render: function() {}}
+      view.WinnersView = {render: function() {}}
+
+      view.WinnersView.render = sinon.spy();
+      view.render();
+
+      sinon.assert.calledOnce(view.WinnersView.render)
+    });
+
+    it("should pass the game id to winners view", function() {
+      var myGame = new blackjack.Game({id: 42});
+      var myUser = new blackjack.User({id: 19});
+      var view = new blackjack.GameView();
+
+      view.games = myGame
+      view.CardsView = {render: function() {}}
+      view.WinnersView = {render: function() {}}
+
+      view.WinnersView.render = sinon.spy();
+      view.render();
+
+      assert(view.WinnersView.render.calledWith(view.games.id))
+    });
+  });
+
+
+  it("should call the makeBet function when the setBetVariable function is executed", function() {
+    var myGame = new blackjack.Game({id: 42});
+    var betFactoryMock = sinon.mock(myGame);
+    var myUser = new blackjack.User({id: 19});
+    var view = new blackjack.GameView();
+    view.games = myGame;
+    view.user = myUser;
+    view.CardsView = {render: function() {}}
+    view.render()
+    betFactoryMock.expects("makeBet").withArgs(110).once();
+
+    $('#betInput').val("110");
+    view.setBetVariable();
+
+    betFactoryMock.verify()
   });
 
   describe("#StandButton", function(){
@@ -296,69 +442,117 @@ describe("Game View", function() {
     });
 
     //TODO - ask tony
-   // it("hitButtonFunction re-renders the page once it gets a callback", function(){
-   //    var myGame = new blackjack.Game({id: 42});
-   //    var myUser = new blackjack.User({id: 19});
-   //    var view = new blackjack.GameView();
-   //    view.games = myGame;
-   //    view.user = myUser;
-   //    view.games.gameHit = sinon.stub().returns();
-   //    view.render = sinon.spy()
+    // it("hitButtonFunction re-renders the page once it gets a callback", function(){
+    //    var myGame = new blackjack.Game({id: 42});
+    //    var myUser = new blackjack.User({id: 19});
+    //    var view = new blackjack.GameView();
+    //    view.games = myGame;
+    //    view.user = myUser;
+    //    view.games.gameHit = sinon.stub().returns();
+    //    view.render = sinon.spy()
 
-   //    //invoke
-   //    view.hitButtonFunction();
+    //    //invoke
+    //    view.hitButtonFunction();
 
 
-   //    //expect
-   //    sinon.assert.calledOnce(view.render);
-   // });
+    //    //expect
+    //    sinon.assert.calledOnce(view.render);
+    // });
+  });
+});
+
+describe("WinnersView", function() {
+  beforeEach(function() {
+    this.subject = new blackjack.WinnersView();
   });
 
-  describe("#render", function() {
-    it("should call for a update on the usermodel whenever gameView is rendered ", function() {
+  it("exists", function () {
+    expect(this.subject).to.exist;
+  });
+
+  it("creates a Winners model when initialized is called", function() {
+    expect(this.subject.winner).to.not.be.undefined;
+  });
+
+  it("has a render function", function() {
+    expect (this.subject.render).to.exist;
+  });
+
+  it("calls the render function", function(){
+    this.subject.render = sinon.spy();
+    this.subject.initialize();
+
+    sinon.assert.calledOnce(this.subject.render);
+  });
+
+  describe("#render function", function() {
+
+    it("should set the id for the winner model", function() {
+      this.subject.winner = new blackjack.Winner;
+
+      this.subject.render(52);
+
+      assert.equal(this.subject.winner.id, 52);
+    });
+
+    it("should call for a update on the Winner model whenever winnerView is rendered", function() {
       //setup
-      this.subject.user.fetch = sinon.spy()
+      this.subject.winner.fetch = sinon.spy();
 
       //invoke
-      view.games = myGame
-      view.render();
+      this.subject.render();
 
       //expectations
-      sinon.assert.calledOnce(this.subject.user.fetch)
+      sinon.assert.calledOnce(this.subject.winner.fetch);
+    });
+
+    it("should use the winners model to display the winner", function() {
+
+      var winnerStub = sinon.stub();
+      this.subject.winner.fetch = winnerStub;
+      this.subject.displayWinner = sinon.spy();
+
+      this.subject.render();
+      winnerStub.getCall(0).args[0].success();
+
+      sinon.assert.calledOnce(this.subject.displayWinner);
     });
   });
 
-  it("should render the player cards", function() {
-    var myGame = new blackjack.Game({id: 42});
-    var myUser = new blackjack.User({id: 19});
-    var view = new blackjack.GameView();
+  describe("#display function", function(){
 
-    view.games = myGame
-    view.CardsView = {render: function() {}}
+    it("should exist", function() {
+      expect(this.subject.displayWinner).to.exist;
+    });
 
-    view.CardsView.render = sinon.spy();
-    view.render();
+    it("should display the winner of the hand if player wins", function() {
+      $("body").append('<section id = "winner"></section>');
+      $("body").append('<script id = "winner-template" type="text/x-handlebars-template"> <div id="winner">{{this.outcome}}</div> </script>');
+      this.subject.winner = new Backbone.Model();
+      this.subject.winner
+      .set({outcome: "Player Wins"});
 
-    sinon.assert.calledOnce(view.CardsView.render)
-  });
+      this.subject.displayWinner();
 
-  it("should call the makeBet function when the setBetVariable function is executed", function() {
-    var myGame = new blackjack.Game({id: 42});
-    var betFactoryMock = sinon.mock(myGame);
-    var myUser = new blackjack.User({id: 19});
-    var view = new blackjack.GameView();
-    view.games = myGame;
-    view.user = myUser;
-    view.CardsView = {render: function() {}}
-    view.render()
-    betFactoryMock.expects("makeBet").withArgs(110).once();
+      var winner = $('#winner').text();
+      assert.equal(winner, ' Player Wins ');
+    });
 
-    $('#betInput').val("110");
-    view.setBetVariable();
+    it("should display the winner of the hand if dealer wins", function() {
+      $("body").append('<section id = "winner"></section>');
+      $("body").append('<script id = "winner-template" type="text/x-handlebars-template"> <div id="winner">{{this.outcome}}</div> </script>');
+      this.subject.winner = new Backbone.Model();
+      this.subject.winner
+      .set({outcome: "Dealer Wins"});
 
-    betFactoryMock.verify()
+      this.subject.displayWinner();
+
+      var winner = $('#winner').text();
+      assert.equal(winner, ' Dealer Wins ');
+    });
   });
 });
+
 
 describe("CardsView", function() {
   beforeEach(function() {

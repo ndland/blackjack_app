@@ -1,5 +1,12 @@
 var blackjack = blackjack || {};
 
+blackjack.Winner = Backbone.Model.extend({
+  id: undefined,
+  url: function() {
+    return "/api/game/" + this.id + "/winner";
+  }
+});
+
 blackjack.Bet = Backbone.Model.extend({
   url: function() {
     return "/api/game/" + this.get("game_id") + "/bet";
