@@ -1,243 +1,6 @@
 #= require application
 
 var blackjack = blackjack || {};
-
-describe("User Model", function() {
-  beforeEach( function() {
-    $("body").append('<section id = "game"> </section>');
-    $("body").append('<section id = "controls"> </section>');
-    $("body").append('<script id="controls-template" type="text/x-handlebars-template"> <button id="betButton">bet</button> <input type="text" id="betInput" size="5">  </script>');
-    this.server = sinon.fakeServer.create();
-    this.server.autoRespond = true
-  });
-
-  afterEach( function() {
-    this.server.restore();
-  });
-
-  it('the User model accesses /api/user/19', function(done) {
-    callback = function() {
-      done();
-    }
-
-    this.server.respondWith("GET", "/api/user/19",
-                            [200, { "Content-Type": "application/json"},
-                              '{"credits":100,"id":19,"level":1,"name":"User_1"}'] );
-
-                              var myUser = new blackjack.User( {id: 19 } );
-                              myUser.fetch({success: callback});
-  });
-});
-
-describe ("Stand Model", function() {
-
-  beforeEach( function() {
-    this.server = sinon.fakeServer.create();
-    this.server.autoRespond = true
-  });
-
-  afterEach( function() {
-    this.server.restore();
-  });
-
-  it("exists", function() {
-    var myStand = new blackjack.Stand();
-  });
-
-  it("accesses /api/game/42/stand", function(done) {
-    callback = function() {
-      done();
-    }
-
-    this.server.respondWith("POST", "/api/game/42/stand",
-                            [200, { "Content-Type": "application/json"}, '{}'] );
-
-                            var myStand = new blackjack.Stand({game_id: 42});
-                            myStand.save(null, {success: callback});
-  });
-
-  it("should make a call to the web server through gameStand", function(done) {
-    callback = function() {
-      done();
-    }
-
-    this.server.respondWith("POST", "/api/game/42/stand",
-                            [200, { "Content-Type": "application/json"}, '{}']
-                           );
-                           var myGame = new blackjack.Game({ id: 42 });
-                           myGame.gameStand(callback);
-  });
-
-  it("should set the game id", function(done) {
-    var that = this;
-
-    callback = function() {
-      var game_id = that.server.requests[0].requestBody;
-      expect(game_id).to.equal('{"game_id":43}');
-      done();
-    }
-    this.server.respondWith("POST", "/api/game/43/stand",
-                            [200, { "Content-Type": "application/json"}, '{}']
-                           );
-                           var myGame = new blackjack.Game({ id: 43 });
-                           myGame.gameStand(callback);
-  });
-});
-
-describe ("Hit Model", function() {
-
-  beforeEach( function() {
-    this.server = sinon.fakeServer.create();
-    this.server.autoRespond = true
-  });
-
-  afterEach( function() {
-    this.server.restore();
-  });
-
-  it("exists", function() {
-    var myHit = new blackjack.Hit();
-  });
-
-  it("accesses /api/game/42/hit", function(done) {
-    callback = function() {
-      done();
-    }
-
-    this.server.respondWith("POST", "/api/game/42/hit",
-                            [200, { "Content-Type": "application/json"}, '{}'] );
-
-                            var myHit = new blackjack.Hit({game_id: 42});
-                            myHit.save(null, {success: callback});
-  });
-
-  it("should make a call to the web server through gameHit", function(done) {
-    callback = function() {
-      done();
-    }
-
-    this.server.respondWith("POST", "/api/game/42/hit",
-                            [200, { "Content-Type": "application/json"}, '{}']
-                           );
-                           var myGame = new blackjack.Game({ id: 42 });
-                           myGame.gameHit(callback);
-  });
-
-  it("should set the game id", function(done) {
-    var that = this;
-
-    callback = function() {
-      var game_id = that.server.requests[0].requestBody;
-      expect(game_id).to.equal('{"game_id":43}');
-      done();
-    }
-    this.server.respondWith("POST", "/api/game/43/hit",
-                            [200, { "Content-Type": "application/json"}, '{}']
-                           );
-                           var myGame = new blackjack.Game({ id: 43 });
-                           myGame.gameHit(callback);
-  });
-});
-
-describe("Bet Model", function() {
-
-  beforeEach( function() {
-    $("body").append('<section id = "game"> </section>');
-    $("body").append('<script id="game-template" type="text/x-handlebars-template"> <button id="betButton">bet</button> <input type="text" id="betInput" size="5">  </script>');
-
-    this.server = sinon.fakeServer.create();
-    this.server.autoRespond = true
-  });
-
-  afterEach( function() {
-    this.server.restore();
-  });
-
-  it("the Bet model access /api/game/42/bet", function (done) {
-    callback = function() {
-      done();
-    }
-
-    this.server.respondWith("POST", "/api/game/42/bet",
-                            [200, { "Content-Type": "application/json"}, '{}'] );
-
-                            var myBet = new blackjack.Bet({game_id: 42, amount: 300});
-                            myBet.save(null, {success: callback});
-  });
-
-  it("should make a call to the web server through makeBet", function(done) {
-    callback = function() {
-      done();
-    }
-
-    this.server.respondWith("POST", "/api/game/42/bet",
-                            [200, { "Content-Type": "application/json"}, '{}']
-                           );
-                           var myGame = new blackjack.Game({ id: 42 });
-                           myGame.makeBet(500, callback);
-  });
-
-  it("makeBet should set the bet amount to the web server", function(done) {
-    var that = this
-
-    callback = function() {
-      var betElement = that.server.requests[0].requestBody;
-      expect(betElement).to.equal('{"game_id":42,"bet":500}');
-      done();
-    }
-
-    this.server.respondWith("POST", "/api/game/42/bet",
-                            [200, { "Content-Type": "application/json"}, '{}']
-                           );
-
-                           var myGame = new blackjack.Game ({id: 42});
-                           myGame.makeBet(500, callback);
-  });
-});
-
-describe("Winner Model", function() {
-
-  beforeEach( function() {
-    this.subject = new blackjack.Winner();
-    this.server = sinon.fakeServer.create();
-    this.server.autoRespond = true
-  });
-
-  afterEach( function() {
-    this.server.restore();
-  });
-
-  it("exists", function() {
-    var winner = new blackjack.Winner();
-  });
-
-  it("accesses /api/game/42/winner", function(done) {
-    callback = function() {
-      done();
-    }
-
-    this.server.respondWith("GET", "/api/game/42/winner",
-                            [200, { "Content-Type": "application/json"}, '{}']
-                           );
-                           this.winner = new blackjack.Winner;
-                           this.winner.id = 42;
-                           this.winner.fetch({success: callback});
-  });
-
-  it("accesses /api/game/21/winner", function(done) {
-    callback = function() {
-      done();
-    }
-
-    this.server.respondWith("GET", "/api/game/21/winner",
-                            [200, { "Content-Type": "application/json"}, '{}']
-                           );
-                           this.winner = new blackjack.Winner;
-                           this.winner.id = 21;
-                           this.winner.fetch({success: callback});
-  });
-});
-
 describe("Game View", function() {
   beforeEach( function() {
     $("body").append('<section id = "game"> </section>');
@@ -813,3 +576,240 @@ describe("Dealer Cards Collection", function() {
                             dealerCards.fetch({success: callback});
   });
 });
+
+describe("User Model", function() {
+  beforeEach( function() {
+    $("body").append('<section id = "game"> </section>');
+    $("body").append('<section id = "controls"> </section>');
+    $("body").append('<script id="controls-template" type="text/x-handlebars-template"> <button id="betButton">bet</button> <input type="text" id="betInput" size="5">  </script>');
+    this.server = sinon.fakeServer.create();
+    this.server.autoRespond = true
+  });
+
+  afterEach( function() {
+    this.server.restore();
+  });
+
+  it('the User model accesses /api/user/19', function(done) {
+    callback = function() {
+      done();
+    }
+
+    this.server.respondWith("GET", "/api/user/19",
+                            [200, { "Content-Type": "application/json"},
+                              '{"credits":100,"id":19,"level":1,"name":"User_1"}'] );
+
+                              var myUser = new blackjack.User( {id: 19 } );
+                              myUser.fetch({success: callback});
+  });
+});
+
+describe ("Stand Model", function() {
+
+  beforeEach( function() {
+    this.server = sinon.fakeServer.create();
+    this.server.autoRespond = true
+  });
+
+  afterEach( function() {
+    this.server.restore();
+  });
+
+  it("exists", function() {
+    var myStand = new blackjack.Stand();
+  });
+
+  it("accesses /api/game/42/stand", function(done) {
+    callback = function() {
+      done();
+    }
+
+    this.server.respondWith("POST", "/api/game/42/stand",
+                            [200, { "Content-Type": "application/json"}, '{}'] );
+
+                            var myStand = new blackjack.Stand({game_id: 42});
+                            myStand.save(null, {success: callback});
+  });
+
+  it("should make a call to the web server through gameStand", function(done) {
+    callback = function() {
+      done();
+    }
+
+    this.server.respondWith("POST", "/api/game/42/stand",
+                            [200, { "Content-Type": "application/json"}, '{}']
+                           );
+                           var myGame = new blackjack.Game({ id: 42 });
+                           myGame.gameStand(callback);
+  });
+
+  it("should set the game id", function(done) {
+    var that = this;
+
+    callback = function() {
+      var game_id = that.server.requests[0].requestBody;
+      expect(game_id).to.equal('{"game_id":43}');
+      done();
+    }
+    this.server.respondWith("POST", "/api/game/43/stand",
+                            [200, { "Content-Type": "application/json"}, '{}']
+                           );
+                           var myGame = new blackjack.Game({ id: 43 });
+                           myGame.gameStand(callback);
+  });
+});
+
+describe ("Hit Model", function() {
+
+  beforeEach( function() {
+    this.server = sinon.fakeServer.create();
+    this.server.autoRespond = true
+  });
+
+  afterEach( function() {
+    this.server.restore();
+  });
+
+  it("exists", function() {
+    var myHit = new blackjack.Hit();
+  });
+
+  it("accesses /api/game/42/hit", function(done) {
+    callback = function() {
+      done();
+    }
+
+    this.server.respondWith("POST", "/api/game/42/hit",
+                            [200, { "Content-Type": "application/json"}, '{}'] );
+
+                            var myHit = new blackjack.Hit({game_id: 42});
+                            myHit.save(null, {success: callback});
+  });
+
+  it("should make a call to the web server through gameHit", function(done) {
+    callback = function() {
+      done();
+    }
+
+    this.server.respondWith("POST", "/api/game/42/hit",
+                            [200, { "Content-Type": "application/json"}, '{}']
+                           );
+                           var myGame = new blackjack.Game({ id: 42 });
+                           myGame.gameHit(callback);
+  });
+
+  it("should set the game id", function(done) {
+    var that = this;
+
+    callback = function() {
+      var game_id = that.server.requests[0].requestBody;
+      expect(game_id).to.equal('{"game_id":43}');
+      done();
+    }
+    this.server.respondWith("POST", "/api/game/43/hit",
+                            [200, { "Content-Type": "application/json"}, '{}']
+                           );
+                           var myGame = new blackjack.Game({ id: 43 });
+                           myGame.gameHit(callback);
+  });
+});
+
+describe("Bet Model", function() {
+
+  beforeEach( function() {
+    $("body").append('<section id = "game"> </section>');
+    $("body").append('<script id="game-template" type="text/x-handlebars-template"> <button id="betButton">bet</button> <input type="text" id="betInput" size="5">  </script>');
+
+    this.server = sinon.fakeServer.create();
+    this.server.autoRespond = true
+  });
+
+  afterEach( function() {
+    this.server.restore();
+  });
+
+  it("the Bet model access /api/game/42/bet", function (done) {
+    callback = function() {
+      done();
+    }
+
+    this.server.respondWith("POST", "/api/game/42/bet",
+                            [200, { "Content-Type": "application/json"}, '{}'] );
+
+                            var myBet = new blackjack.Bet({game_id: 42, amount: 300});
+                            myBet.save(null, {success: callback});
+  });
+
+  it("should make a call to the web server through makeBet", function(done) {
+    callback = function() {
+      done();
+    }
+
+    this.server.respondWith("POST", "/api/game/42/bet",
+                            [200, { "Content-Type": "application/json"}, '{}']
+                           );
+                           var myGame = new blackjack.Game({ id: 42 });
+                           myGame.makeBet(500, callback);
+  });
+
+  it("makeBet should set the bet amount to the web server", function(done) {
+    var that = this
+
+    callback = function() {
+      var betElement = that.server.requests[0].requestBody;
+      expect(betElement).to.equal('{"game_id":42,"bet":500}');
+      done();
+    }
+
+    this.server.respondWith("POST", "/api/game/42/bet",
+                            [200, { "Content-Type": "application/json"}, '{}']
+                           );
+
+                           var myGame = new blackjack.Game ({id: 42});
+                           myGame.makeBet(500, callback);
+  });
+});
+
+describe("Winner Model", function() {
+
+  beforeEach( function() {
+    this.subject = new blackjack.Winner();
+    this.server = sinon.fakeServer.create();
+    this.server.autoRespond = true
+  });
+
+  afterEach( function() {
+    this.server.restore();
+  });
+
+  it("exists", function() {
+    var winner = new blackjack.Winner();
+  });
+
+  it("accesses /api/game/42/winner", function(done) {
+    callback = function() {
+      done();
+    }
+
+    this.server.respondWith("GET", "/api/game/42/winner",
+                            [200, { "Content-Type": "application/json"}, '{}']
+                           );
+                           this.winner = new blackjack.Winner;
+                           this.winner.id = 42;
+                           this.winner.fetch({success: callback});
+  });
+
+  it("accesses /api/game/21/winner", function(done) {
+    callback = function() {
+      done();
+    }
+
+    this.server.respondWith("GET", "/api/game/21/winner",
+                            [200, { "Content-Type": "application/json"}, '{}']
+                           );
+                           this.winner = new blackjack.Winner;
+                           this.winner.id = 21;
+                           this.winner.fetch({success: callback});
+  });
+});
+
