@@ -56,15 +56,14 @@ class Dealer
     @dealer_cards_total = over21?(faceValue_total(@dealer_cards))
 
     if @player_cards_total > @dealer_cards_total
-      return "Player"
+      Winner.create(outcome: "Player", game_id: game_id)
     elsif @player_cards_total == @dealer_cards_total
-      return "No Winner: game was a push"
+      Winner.create(outcome: "No Winner: game was a push", game_id: game_id)
     else
-      return "Dealer"
+      Winner.create(outcome: "Dealer", game_id: game_id)
     end
   end
 
-  # TODO make sure that this function is tested
   def over21? (cardTotal)
     if cardTotal > 21
       cardTotal = 0
