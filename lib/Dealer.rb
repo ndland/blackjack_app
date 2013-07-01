@@ -6,6 +6,15 @@ class Dealer
     @card = Card.new
   end
 
+  def new_hand(game_id)
+    DealerCards.destroy_all(game_id: game_id)
+    PlayerCards.destroy_all(game_id: game_id)
+    2.times{
+      deal_dealer_card(game_id)
+      deal_player_card(game_id)
+    }
+  end
+
   def deal_player_card(game_id)
     newCard = card.get_card
     PlayerCards.create(suit: newCard.suit, faceValue: newCard.faceValue, game_id: game_id)
@@ -56,7 +65,7 @@ class Dealer
 
     outcome = "Dealer is the Winner"
     if @player_cards_total > @dealer_cards_total
-     outcome = "Player is the Winner"
+      outcome = "Player is the Winner"
     elsif @player_cards_total == @dealer_cards_total
       outcome = "No Winner: game was a push"
     end

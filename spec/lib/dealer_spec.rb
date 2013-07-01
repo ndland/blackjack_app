@@ -232,4 +232,29 @@ describe Dealer do
       end
     end
   end
+
+  describe "#new_hand" do
+
+    before do
+      @card = Fabricate (:card)
+    end
+
+    it "should have a method new_hand" do
+      subject.new_hand(3)
+    end
+
+    it "gets two cards for the dealer and the player" do
+      subject.new_hand(3)
+      DealerCards.count.should eq(2)
+      PlayerCards.count.should eq(2)
+    end
+
+    it "deletes the old hand and deals the new hand to the player and dealer" do
+      Fabricate(:dealer_cards, game_id: 2);
+      Fabricate(:player_cards, game_id: 2);
+      subject.new_hand(2)
+      DealerCards.count.should eq(2)
+      PlayerCards.count.should eq(2)
+    end
+  end
 end

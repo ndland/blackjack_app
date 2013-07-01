@@ -51,7 +51,7 @@ Then(/^I should see 2 player cards and 2 dealer cards$/) do
   until passed do
     if PlayerCards.count == 2
       passed = true
-    elsif x == 5
+    elsif x == 100
       p "timeout"
       passed = true
     else
@@ -59,7 +59,7 @@ Then(/^I should see 2 player cards and 2 dealer cards$/) do
     end
     x += 1
   end
-
+  PlayerCards.count.should eq(2)
   page.should have_content(@card1.suit)
   page.should have_content(@card1.faceValue)
   page.should have_content(@card2.suit)
@@ -106,4 +106,32 @@ Then (/^I should see the outcome of the game$/) do
   end
 
   page.should have_content("Winner")
+end
+
+And (/^I have already played a game$/) do
+  step "I have already placed a bet"
+  step "I hit the Stand button"
+  step "I should see the outcome of the game"
+  step "I make a bet of 10"
+end
+
+Then (/^I should have a new hand$/) do
+  passed = false
+  x = 0
+
+  until passed do
+    if PlayerCards.count == 2
+      passed = true
+    elsif x == 100
+      p "timeout"
+      passed = true
+    else
+      sleep 1
+    end
+    x += 1
+  end
+  PlayerCards.count.should eq(2)
+  page.should_not have_content(@card1.suit)
+  page.should_not have_content(@card1.faceValue)
+  page.should_not have_content(@card2.suit)
 end
