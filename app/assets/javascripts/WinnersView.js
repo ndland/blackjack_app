@@ -9,7 +9,7 @@ blackjack.WinnersView = Backbone.View.extend({
   },
 
   render: function(game_id) {
-    that = this;
+    those = this;
     this.winner.id = game_id
     this.winner.fetch({success: this.displayWinner});
   },
@@ -17,6 +17,6 @@ blackjack.WinnersView = Backbone.View.extend({
   displayWinner: function() {
     var source = $('#winner-template').html();
     var template = Handlebars.compile(source);
-    $('#winner').html(template(that.winner.toJSON()));
+    $('#winner').html(template(those.winner.toJSON()));
   }
 });

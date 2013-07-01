@@ -241,7 +241,7 @@ describe("Winner Model", function() {
 describe("Game View", function() {
   beforeEach( function() {
     $("body").append('<section id = "game"> </section>');
-    $("body").append('<script id="game-template" type="text/x-handlebars-template"><buton id="standButton">stand</button> <button id="hitButton">hit</button> <button id="betButton">bet</button> <input type="text" id="betInput" size="5">  </script>');
+    $("body").append('<script id="game-template" type="text/x-handlebars-template"> <button id="standButton">stand</button> <button id="hitButton">hit</button> <button id="betButton">bet</button> <input type="text" id="betInput" size="5">  </script>');
 
     this.server = sinon.fakeServer.create();
     this.server.autoRespond = true
@@ -700,6 +700,7 @@ describe("CardsView", function() {
       assert.equal($('#all').text(), ' 1 c 1 b 1 a');
     });
   });
+
   it("should display all dealers cards", function() {
     //setup
     $("body").append('<section id = "dealerCards"> </section>');

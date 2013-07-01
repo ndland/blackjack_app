@@ -14,9 +14,9 @@ blackjack.Bet = Backbone.Model.extend({
 });
 
 blackjack.Stand = Backbone.Model.extend({
-url: function() {
-  return "/api/game/" + this.get("game_id") + "/stand";
-}
+  url: function() {
+    return "/api/game/" + this.get("game_id") + "/stand";
+  }
 });
 
 blackjack.Hit = Backbone.Model.extend({
@@ -50,10 +50,9 @@ blackjack.Game = Backbone.Model.extend({
 });
 
 blackjack.PlayerCardsCollection = Backbone.Collection.extend({
-
   id: undefined,
   url: function() {
-    return "/api/game/" + this.id +"/player_cards";
+    return "/api/game/" + this.id + "/player_cards";
   }
 });
 

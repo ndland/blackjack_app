@@ -10,7 +10,7 @@
 #
 
 class GameList < ActiveRecord::Base
-	attr_accessible :table_id, :user_id
+  attr_accessible :table_id, :user_id
 
-	validates :table_id, :uniqueness => { :scope => :user_id }
+  validates :table_id, :uniqueness => { :scope => :user_id }
 end
