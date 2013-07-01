@@ -17,11 +17,13 @@ class Dealer
   end
 
   def play(game_id)
-    @cards  = DealerCards.find(:all, conditions:{game_id: game_id})
+    @cards  = find_cards(DealerCards, game_id)
 
     if faceValue_total(@cards) < 17
       deal_dealer_card(game_id)
       play(game_id)
+    else
+      find_winner(game_id)
     end
   end
 
@@ -49,25 +51,26 @@ class Dealer
   end
 
   def find_winner(game_id)
-    @player_cards = PlayerCards.find(:all, conditions:{game_id: game_id})
-    @dealer_cards = DealerCards.find(:all, conditions:{game_id: game_id})
+    @player_cards_total = checkOver21(faceValue_total(find_cards(PlayerCards, game_id)))
+    @dealer_cards_total = checkOver21(faceValue_total(find_cards(DealerCards, game_id)))
 
-    @player_cards_total = over21?(faceValue_total(@player_cards))
-    @dealer_cards_total = over21?(faceValue_total(@dealer_cards))
-
+    outcome = "Dealer is the Winner"
     if @player_cards_total > @dealer_cards_total
-      Winner.create(outcome: "Player", game_id: game_id)
+     outcome = "Player is the Winner"
     elsif @player_cards_total == @dealer_cards_total
-      Winner.create(outcome: "No Winner: game was a push", game_id: game_id)
-    else
-      Winner.create(outcome: "Dealer", game_id: game_id)
+      outcome = "No Winner: game was a push"
     end
+    Winner.create(outcome: outcome, game_id: game_id)
   end
 
-  def over21? (cardTotal)
+  def checkOver21(cardTotal)
     if cardTotal > 21
       cardTotal = 0
     end
     return cardTotal
+  end
+
+  def find_cards(model, game_id)
+    return model.find(:all, conditions:{game_id: game_id})
   end
 end

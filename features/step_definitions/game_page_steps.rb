@@ -90,5 +90,20 @@ When (/^I hit the Stand button$/) do
 end
 
 Then (/^I should see the outcome of the game$/) do
-  page.should have_content("WIN")
+  passed = false
+  x = 0
+
+  until passed do
+    if PlayerCards.count == 2
+      passed = true
+    elsif x == 5
+      p "timeout"
+      passed = true
+    else
+      sleep 1
+    end
+    x += 1
+  end
+
+  page.should have_content("Winner")
 end

@@ -28,9 +28,11 @@ Feature: Game Page
     When I hit the Hit button
     Then I should see 3 player cards and 2 dealer cards
 
+    @WIP
     @javascript
   Scenario: Player Standing
     Given I am on a game page
     And I have already placed a bet
     When I hit the Stand button
     Then I should see the outcome of the game
+    Then take a screenshot

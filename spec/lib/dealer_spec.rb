@@ -68,6 +68,8 @@ describe Dealer do
   describe "the dealer playing" do
 
     before do
+      Fabricate(:player_cards, faceValue:"A", game_id: 42)
+      Fabricate(:player_cards, faceValue:"A", game_id: 4)
       @card = Fabricate(:dealer_cards, faceValue:"A", game_id: 42)
       @card1 = Fabricate(:dealer_cards, faceValue:"2", suit: "int", game_id: 42)
       @card2 = Fabricate(:dealer_cards, faceValue:"3", suit: "int", game_id: 42)
@@ -98,6 +100,14 @@ describe Dealer do
 
       subject.play(4)
     end
+
+    it "should call find_winner when the total is 17 or higher" do
+      @card6 = Fabricate(:player_cards, faceValue:"Q", game_id: 42)
+      @card7 = Fabricate(:player_cards, faceValue:"3", game_id: 42)
+      subject.play(42)
+      Winner.count.should eq(1)
+    end
+
     describe "find_winner" do
       it "should have a method find_winner" do
         @card6 = Fabricate(:player_cards, faceValue:"Q", game_id: 42)
@@ -134,7 +144,7 @@ describe Dealer do
         Fabricate(:dealer_cards, faceValue: "K", game_id: 7)
         Fabricate(:dealer_cards, faceValue: "5", game_id: 7)
         subject.find_winner(7)
-        Winner.first.outcome.should eq("Player")
+        Winner.first.outcome.should eq("Player is the Winner")
       end
 
       it "dealer wins if players card value is 17 and dealers card value is 19" do
@@ -143,7 +153,7 @@ describe Dealer do
         Fabricate(:dealer_cards, faceValue: "K", game_id: 7)
         Fabricate(:dealer_cards, faceValue: "9", game_id: 7)
         subject.find_winner(7)
-        Winner.first.outcome.should eq("Dealer")
+        Winner.first.outcome.should eq("Dealer is the Winner")
       end
 
       it "player wins if players cards value is 17 and dealers cards are 22" do
@@ -153,7 +163,7 @@ describe Dealer do
         Fabricate(:dealer_cards, faceValue: "K", game_id: 7)
         Fabricate(:dealer_cards, faceValue: "2", game_id: 7)
         subject.find_winner(7)
-        Winner.first.outcome.should eq("Player")
+        Winner.first.outcome.should eq("Player is the Winner")
       end
 
       it "returns 'No Winner' if the player and the dealer have the same score" do
@@ -165,17 +175,17 @@ describe Dealer do
         Winner.first.outcome.should eq("No Winner: game was a push")
       end
 
-      describe "over21?" do
+      describe "checkOver21" do
         it "should return 0 if the card total is over 21" do
-          subject.over21?(42).should eq(0)
+          subject.checkOver21(42).should eq(0)
         end
 
         it "should return 21 if the card total is 21" do
-          subject.over21?(21).should eq(21)
+          subject.checkOver21(21).should eq(21)
         end
 
         it "should return the card total if the card total is under 21" do
-          subject.over21?(11).should eq(11)
+          subject.checkOver21(11).should eq(11)
         end
       end
     end
