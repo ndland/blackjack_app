@@ -256,5 +256,18 @@ describe Dealer do
       DealerCards.count.should eq(2)
       PlayerCards.count.should eq(2)
     end
+
+    it "refreshes the winner after each hand" do
+      Fabricate(:winner, game_id: 2)
+      subject.new_hand(2)
+      Winner.count.should eq(0)
+    end
+
+    it "only deletes the winner of current game" do
+      Fabricate(:winner, game_id: 2)
+      Fabricate(:winner, game_id: 42)
+      subject.new_hand(2)
+      Winner.count.should eq(1)
+    end
   end
 end

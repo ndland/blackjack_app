@@ -7,7 +7,6 @@ blackjack.GameView = Backbone.View.extend({
 
   initialize: function() {
     this.CardsView = new blackjack.CardsView();
-    this.WinnersView = new blackjack.WinnersView();
   },
 
 
@@ -16,7 +15,8 @@ blackjack.GameView = Backbone.View.extend({
     var template = Handlebars.compile(source);
     this.$el.html( template );
     this.CardsView.render(this.games.id);
-    this.WinnersView.render(this.games.id)
+    this.WinnersView = new blackjack.WinnersView();
+    this.WinnersView.render(this.games.id);
 
 
     if (typeof this.user != 'undefined'){

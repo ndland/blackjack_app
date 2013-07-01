@@ -1,4 +1,5 @@
 var blackjack = blackjack || {};
+
 blackjack.WinnersView = Backbone.View.extend({
   winner: undefined,
 

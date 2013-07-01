@@ -45,20 +45,7 @@ end
 
 Then(/^I should see 2 player cards and 2 dealer cards$/) do
 
-  passed = false
-  x = 0
-
-  until passed do
-    if PlayerCards.count == 2
-      passed = true
-    elsif x == 100
-      p "timeout"
-      passed = true
-    else
-      sleep 1
-    end
-    x += 1
-  end
+  step "wait"
   PlayerCards.count.should eq(2)
   page.should have_content(@card1.suit)
   page.should have_content(@card1.faceValue)
@@ -74,6 +61,7 @@ Given (/^I have already placed a bet$/) do
   step "I have 100 credits"
   step "I make a bet of 10"
   step "I hit the bet button"
+  sleep 1
   @card5 = Fabricate(:card)
 end
 
@@ -90,21 +78,7 @@ When (/^I hit the Stand button$/) do
 end
 
 Then (/^I should see the outcome of the game$/) do
-  passed = false
-  x = 0
-
-  until passed do
-    if PlayerCards.count == 2
-      passed = true
-    elsif x == 5
-      p "timeout"
-      passed = true
-    else
-      sleep 1
-    end
-    x += 1
-  end
-
+  step "wait"
   page.should have_content("Winner")
 end
 
@@ -116,6 +90,14 @@ And (/^I have already played a game$/) do
 end
 
 Then (/^I should have a new hand$/) do
+  step "wait"
+  PlayerCards.count.should eq(2)
+  page.should_not have_content(@card1.suit)
+  page.should_not have_content(@card1.faceValue)
+  page.should_not have_content(@card2.suit)
+end
+
+Then (/^wait$/) do
   passed = false
   x = 0
 
@@ -130,8 +112,4 @@ Then (/^I should have a new hand$/) do
     end
     x += 1
   end
-  PlayerCards.count.should eq(2)
-  page.should_not have_content(@card1.suit)
-  page.should_not have_content(@card1.faceValue)
-  page.should_not have_content(@card2.suit)
 end
