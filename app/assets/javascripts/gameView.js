@@ -10,6 +10,8 @@ blackjack.GameView = Backbone.View.extend({
     var template = Handlebars.compile(source);
     this.$el.html( template );
     this.CardsView = new blackjack.CardsView();
+    $('#hitButton').prop('disabled', true);
+    $('#standButton').prop('disabled', true);
   },
 
 
@@ -41,7 +43,9 @@ blackjack.GameView = Backbone.View.extend({
     var that = this;
     this.games.makeBet(parseInt(bet), function() {
       that.render();
-      $('#betButton').prop('disabled', true)
+      $('#betButton').prop('disabled', true);
+      $('#hitButton').prop('disabled', false);
+      $('#standButton').prop('disabled', false);
     });
   },
 
@@ -57,6 +61,8 @@ blackjack.GameView = Backbone.View.extend({
     this.games.gameStand(function() {
       that.render();
       $('#betButton').prop('disabled', false)
+      $('#hitButton').prop('disabled', true);
+      $('#standButton').prop('disabled', true);
     });
   }
 });

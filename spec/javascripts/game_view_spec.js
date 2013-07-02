@@ -101,6 +101,34 @@ describe("Game View", function() {
       assert(view.CardsView.render.calledWith(view.games.id))
     });
 
+    it("disables the hit button, until the bet is placed", function() {
+      view.games = myGame;
+      expect($('#hitButton').is(':disabled')).to.be.true
+    });
+
+    it("re-enables the hit button after the bet is placed", function() {
+      view.games = myGame;
+      var betResponse= sinon.stub();
+      view.games.makeBet = betResponse;
+      betResponse.callsArg(1);
+      view.setBetVariable();
+      expect($('#hitButton').is(':disabled')).to.be.false
+    });
+
+    it("disables the stand button, until the bet is placed", function() {
+      view.games = myGame;
+      expect($('#standButton').is(':disabled')).to.be.true
+    });
+
+    it("re-enables the stand button after the bet is placed", function() {
+      view.games = myGame;
+      var betResponse= sinon.stub();
+      view.games.makeBet = betResponse;
+      betResponse.callsArg(1);
+      view.setBetVariable();
+      expect($('#standButton').is(':disabled')).to.be.false
+    });
+
     // TODO: figure out how to test this or  if creating a new view is even correct
     // it("should render the winners view", function() {
     //   var myGame = new blackjack.Game({id: 42});
@@ -152,7 +180,7 @@ describe("Game View", function() {
       betFactoryMock.verify()
     });
 
-    it("deactivates after a successful bet", function() {
+    it("disables after a successful bet", function() {
       view.games = myGame;
       var betResponse= sinon.stub();
       view.games.makeBet = betResponse;
@@ -161,7 +189,7 @@ describe("Game View", function() {
       expect($('#betButton').is(':disabled')).to.be.true
     });
 
-    it("doesn't deactivate when a bet is unsuccessful", function() {
+    it("doesn't disable when a bet is unsuccessful", function() {
       view.games = myGame;
       view.setBetVariable();
       expect($('#betButton').is(':disabled')).to.be.false
@@ -174,6 +202,7 @@ describe("Game View", function() {
       view.CardsView = {render:function() {}}
 
       view.render();
+      $('#standButton').prop('disabled', false);
 
       view.standButtonFunction = sinon.spy();
       view.delegateEvents();
@@ -196,7 +225,7 @@ describe("Game View", function() {
       standFactoryMock.verify();
     });
 
-    it("reactivates the bet button", function() {
+    it("re-enables the bet button", function() {
       view.games = myGame;
       var betResponse= sinon.stub();
       view.games.gameStand = betResponse;
@@ -214,6 +243,7 @@ describe("Game View", function() {
       view.CardsView = {render:function() {}}
 
       view.render();
+      $('#hitButton').prop('disabled', false);
 
       view.hitButtonFunction = sinon.spy();
       view.delegateEvents();
