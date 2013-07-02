@@ -133,22 +133,39 @@ describe("Game View", function() {
     // });
   });
 
+  describe("#BetButton", function(){
 
-  it("should call the makeBet function when the setBetVariable function is executed", function() {
-    var myGame = new blackjack.Game({id: 42});
-    var betFactoryMock = sinon.mock(myGame);
-    var myUser = new blackjack.User({id: 19});
-    var view = new blackjack.GameView();
-    view.games = myGame;
-    view.user = myUser;
-    view.CardsView = {render: function() {}}
-    view.render()
-    betFactoryMock.expects("makeBet").withArgs(110).once();
+    it("should call the makeBet function when the setBetVariable function is executed", function() {
+      var myGame = new blackjack.Game({id: 42});
+      var betFactoryMock = sinon.mock(myGame);
+      var myUser = new blackjack.User({id: 19});
+      var view = new blackjack.GameView();
+      view.games = myGame;
+      view.user = myUser;
+      view.CardsView = {render: function() {}}
+      view.render()
+      betFactoryMock.expects("makeBet").withArgs(110).once();
 
-    $('#betInput').val("110");
-    view.setBetVariable();
+      $('#betInput').val("110");
+      view.setBetVariable();
 
-    betFactoryMock.verify()
+      betFactoryMock.verify()
+    });
+
+    it("deactivates after a successful bet", function() {
+      view.games = myGame;
+      var betResponse= sinon.stub();
+      view.games.makeBet = betResponse;
+      betResponse.callsArg(1);
+      view.setBetVariable();
+      expect($('#betButton').is(':disabled')).to.be.true
+    });
+
+    it("doesn't deactivate when a bet is unsuccessful", function() {
+      view.games = myGame;
+      view.setBetVariable();
+      expect($('#betButton').is(':disabled')).to.be.false
+    });
   });
 
   describe("#StandButton", function(){
@@ -177,6 +194,17 @@ describe("Game View", function() {
       view.standButtonFunction();
 
       standFactoryMock.verify();
+    });
+
+    it("reactivates the bet button", function() {
+      view.games = myGame;
+      var betResponse= sinon.stub();
+      view.games.gameStand = betResponse;
+      betResponse.callsArg(0);
+      view.render();
+      $('#betButton').prop('disabled', true);
+      view.standButtonFunction();
+      expect($('#betButton').is(':disabled')).to.be.false
     });
   });
 

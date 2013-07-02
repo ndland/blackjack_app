@@ -6,18 +6,19 @@ blackjack.GameView = Backbone.View.extend({
   WinnersView: undefined,
 
   initialize: function() {
+    var source = $("#game-template").html();
+    var template = Handlebars.compile(source);
+    this.$el.html( template );
     this.CardsView = new blackjack.CardsView();
   },
 
 
   render: function() {
-    var source = $("#game-template").html();
-    var template = Handlebars.compile(source);
-    this.$el.html( template );
     this.CardsView.render(this.games.id);
     this.WinnersView = new blackjack.WinnersView();
     this.WinnersView.render(this.games.id);
 
+    // this.$('#betInput').val('');
 
     if (typeof this.user != 'undefined'){
       var that = this;
@@ -40,6 +41,7 @@ blackjack.GameView = Backbone.View.extend({
     var that = this;
     this.games.makeBet(parseInt(bet), function() {
       that.render();
+      $('#betButton').prop('disabled', true)
     });
   },
 
@@ -54,6 +56,7 @@ blackjack.GameView = Backbone.View.extend({
     var that = this;
     this.games.gameStand(function() {
       that.render();
+      $('#betButton').prop('disabled', false)
     });
   }
 });
