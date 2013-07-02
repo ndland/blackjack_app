@@ -55,11 +55,19 @@ describe("Game View", function() {
       expect(view.WinnersView).to.exist
     });
 
-  it("initializes the winnersView to a blackjack.WinnersView", function() {
+    it("initializes the winnersView to a blackjack.WinnersView", function() {
       view.games = myGame
       view.render();
       expect(view.WinnersView).to.be.instanceOf(blackjack.WinnersView);
-  });
+    });
+
+    it("clears the bet input", function() {
+      view.games = myGame;
+      $('#betInput').val("110");
+      view.render();
+      assert.equal($('#betInput').val(), '');
+
+    });
 
     it("should call for a update on the usermodel whenever gameView is rendered", function() {
       //setup

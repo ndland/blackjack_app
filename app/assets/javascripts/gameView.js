@@ -20,7 +20,7 @@ blackjack.GameView = Backbone.View.extend({
     this.WinnersView = new blackjack.WinnersView();
     this.WinnersView.render(this.games.id);
 
-    // this.$('#betInput').val('');
+    this.$('#betInput').val('');
 
     if (typeof this.user != 'undefined'){
       var that = this;
