@@ -77,15 +77,15 @@ When (/^I hit the Stand button$/) do
   click_button "Stand"
 end
 
-Then (/^I should see the outcome of the game$/) do
+Then (/^I should see the outcome of the hand$/) do
   step "wait"
   page.should have_content("Winner")
 end
 
-And (/^I have already played a game$/) do
+And (/^I have already played a hand$/) do
   step "I have already placed a bet"
   step "I hit the Stand button"
-  step "I should see the outcome of the game"
+  step "I should see the outcome of the hand"
   step "I make a bet of 10"
 end
 
@@ -112,4 +112,20 @@ Then (/^wait$/) do
     end
     x += 1
   end
+end
+
+When (/^I have won a hand$/) do
+  Fabricate(:card, faceValue: "K")
+  Fabricate(:card, faceValue: "A")
+  Fabricate(:dealer_cards, faceValue: "K", game_id: @game.id)
+  Fabricate(:dealer_cards, faceValue: "7", game_id: @game.id)
+  step "I make a bet of 20"
+  step "I hit the bet button"
+  step "I hit the Stand button"
+  step "wait"
+end
+
+Then (/^I should receive a 2 to 1 payout of my bet$/) do
+  @user.reload
+  @user.credits.should eq(120)
 end

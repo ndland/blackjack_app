@@ -66,7 +66,9 @@ class Dealer
     @dealer_cards_total = checkOver21(faceValue_total(find_cards(DealerCards, game_id)))
 
     outcome = "Dealer is the Winner"
+
     if @player_cards_total > @dealer_cards_total
+      pay_player(game_id)
       outcome = "Player is the Winner"
     elsif @player_cards_total == @dealer_cards_total
       outcome = "No Winner: game was a push"
@@ -83,5 +85,13 @@ class Dealer
 
   def find_cards(model, game_id)
     return model.find(:all, conditions:{game_id: game_id})
+  end
+
+  def pay_player(game_id)
+    user = Person.first
+    payout = GameList.find(:first, conditions: { id: game_id })
+    winnings = payout.bet_amount * 2
+    user.credits += winnings
+    user.save
   end
 end

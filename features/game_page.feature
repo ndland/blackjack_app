@@ -33,9 +33,8 @@ Feature: Game Page
     Given I am on a game page
     And I have already placed a bet
     When I hit the Stand button
-    Then I should see the outcome of the game
+    Then I should see the outcome of the hand
 
-    @WIP
     @javascript
   Scenario: Cards are removed after each hand
     Given I am on a game page
@@ -43,3 +42,9 @@ Feature: Game Page
     When I hit the bet button
     Then I should have a new hand
 
+    @WIP
+    @javascript
+  Scenario: Winners receive a 2 to 1 payout on the bet
+    Given I am on a game page
+    When I have won a hand
+    Then I should receive a 2 to 1 payout of my bet

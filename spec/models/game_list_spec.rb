@@ -1,16 +1,17 @@
 # == Schema Information
 #
-# Table name: winners
+# Table name: game_lists
 #
 #  id         :integer          not null, primary key
-#  game_id    :integer
-#  outcome    :string(255)
+#  user_id    :integer
+#  table_id   :integer
+#  bet_amount :integer
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #
 
 require 'spec_helper'
 
-# describe Winner do
+# describe GameList do
 #   pending "add some examples to (or delete) #{__FILE__}"
 # end

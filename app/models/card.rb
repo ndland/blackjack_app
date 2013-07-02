@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: cards
+#
+#  id         :integer          not null, primary key
+#  suit       :string(255)
+#  faceValue  :string(255)
+#  cardUsed   :boolean
+#  order      :integer
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
+
 class Card < ActiveRecord::Base
   attr_accessible :cardUsed, :faceValue, :order, :suit
 

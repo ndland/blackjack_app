@@ -24,5 +24,18 @@ describe Api::BetController do
 
       post :create, :game_id => @game.id, :bet => 20
     end
+
+    it "changes the users credits" do
+
+      post :create, :game_id => @game.id, :bet => 20
+      @user.reload
+      @user.credits.should eq(80);
+    end
+
+    it "saves the bet in the game_table" do
+      post :create, :game_id => @game.id, :bet => 20
+      @game.reload
+      @game.bet_amount.should eq(20);
+    end
   end
 end

@@ -14,6 +14,9 @@ class Api::BetController < ApplicationController
     user.credits = ( user.credits - params[:bet].to_i )
     user.save
 
+    game = GameList.first(conditions: { id: params[:game_id].to_i})
+    game.bet_amount = params[:bet].to_i
+    game.save
     render :json => {}
   end
 
