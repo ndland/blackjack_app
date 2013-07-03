@@ -18,8 +18,11 @@ class Dealer
   end
 
   def deal_player_card(game_id)
-    newCard = card.get_card
-    PlayerCards.create(suit: newCard.suit, faceValue: newCard.faceValue, game_id: game_id)
+    @player_cards_hand  = find_cards(PlayerCards, game_id)
+    if @player_cards_hand == [] || faceValue_total(@player_cards_hand) < 21
+      newCard = card.get_card
+      PlayerCards.create(suit: newCard.suit, faceValue: newCard.faceValue, game_id: game_id)
+    end
   end
 
   def deal_dealer_card(game_id)

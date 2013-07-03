@@ -45,7 +45,7 @@ end
 
 Then(/^I should see 2 player cards and 2 dealer cards$/) do
 
-  step "wait"
+  step "wait 2"
   PlayerCards.count.should eq(2)
   page.should have_content(@card1.suit)
   page.should have_content(@card1.faceValue)
@@ -78,7 +78,7 @@ When (/^I hit the Stand button$/) do
 end
 
 Then (/^I should see the outcome of the hand$/) do
-  step "wait"
+  step "wait 2"
   page.should have_content("Winner")
 end
 
@@ -90,21 +90,21 @@ And (/^I have already played a hand$/) do
 end
 
 Then (/^I should have a new hand$/) do
-  step "wait"
+  step "wait 2"
   PlayerCards.count.should eq(2)
   page.should_not have_content(@card1.suit)
   page.should_not have_content(@card1.faceValue)
   page.should_not have_content(@card2.suit)
 end
 
-Then (/^wait$/) do
+Then(/^wait (\d+)$/) do |arg1|
   passed = false
   x = 0
 
   until passed do
-    if PlayerCards.count == 2
+    if PlayerCards.count == arg1.to_i
       passed = true
-    elsif x == 100
+    elsif x == 10
       p "timeout"
       passed = true
     else
@@ -122,8 +122,8 @@ When (/^I have won a hand$/) do
   Fabricate(:card, faceValue: "A")
   step "I make a bet of 20"
   step "I hit the bet button"
+  step "wait 2"
   step "I hit the Stand button"
-  step "wait"
 end
 
 Then (/^I should receive a 2 to 1 payout of my bet$/) do
@@ -131,3 +131,23 @@ Then (/^I should receive a 2 to 1 payout of my bet$/) do
   @user.reload
   @user.credits.should eq(120)
 end
+
+When (/^I have a hand of over 21$/) do
+  Card.destroy_all()
+  Fabricate(:card, faceValue: "K")
+  Fabricate(:card, faceValue: "K")
+  Fabricate(:card, faceValue: "2")
+  Fabricate(:card, faceValue: "K")
+  Fabricate(:card, faceValue: "2")
+  step "I make a bet of 20"
+  step "I hit the bet button"
+  step "wait 2"
+  step "I hit the Hit button"
+  step "wait 3"
+end
+
+Then (/^I should not be given another card$/) do
+  sleep 2
+  PlayerCards.count.should eq(3)
+end
+

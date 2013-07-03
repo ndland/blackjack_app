@@ -42,9 +42,16 @@ Feature: Game Page
     When I hit the bet button
     Then I should have a new hand
 
-    @WIP
     @javascript
   Scenario: Winners receive a 2 to 1 payout on the bet
     Given I am on a game page
     When I have won a hand
     Then I should receive a 2 to 1 payout of my bet
+
+    @WIP
+    @javascript
+  Scenario: Player is unable to hit if the face value total is >= 21
+    Given I am on a game page
+    When I have a hand of over 21
+    And I hit the Hit button
+    Then I should not be given another card

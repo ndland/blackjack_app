@@ -16,6 +16,7 @@ development:
   adapter: postgresql
   database: blackjack_development
   host: localhost
+  pool: 10
 
   # Connect on a TCP socket. Omitted by default since the client uses a
   # domain socket that doesn't need configuration. Windows does not have
@@ -39,12 +40,13 @@ test: &test
   adapter: postgresql
   database: blackjack_test
   host: localhost
+  pool: 10
 
 production:
   adapter: postgresql
   encoding: unicode
   database: blackjack_production
-  pool: 5
+  pool: 10
   username: blackjack
   password:
 
