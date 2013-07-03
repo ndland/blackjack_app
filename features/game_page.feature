@@ -38,7 +38,7 @@ Feature: Game Page
     @javascript
   Scenario: Cards are removed after each hand
     Given I am on a game page
-    And I have already played a game
+    And I have already played a hand
     When I hit the bet button
     Then I should have a new hand
 

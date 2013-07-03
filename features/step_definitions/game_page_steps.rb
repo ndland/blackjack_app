@@ -115,10 +115,11 @@ Then (/^wait$/) do
 end
 
 When (/^I have won a hand$/) do
+  Card.destroy_all()
   Fabricate(:card, faceValue: "K")
+  Fabricate(:card, faceValue: "K")
+  Fabricate(:card, faceValue: "2")
   Fabricate(:card, faceValue: "A")
-  Fabricate(:dealer_cards, faceValue: "K", game_id: @game.id)
-  Fabricate(:dealer_cards, faceValue: "7", game_id: @game.id)
   step "I make a bet of 20"
   step "I hit the bet button"
   step "I hit the Stand button"
@@ -126,6 +127,7 @@ When (/^I have won a hand$/) do
 end
 
 Then (/^I should receive a 2 to 1 payout of my bet$/) do
+  sleep 2
   @user.reload
   @user.credits.should eq(120)
 end
