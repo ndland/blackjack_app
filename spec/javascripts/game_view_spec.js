@@ -202,6 +202,21 @@ describe("Game View", function() {
       view.setBetVariable();
       expect($('#betButton').is(':disabled')).to.be.false
     });
+
+    it("disables the text box after a successful bet", function() {
+      view.games = myGame;
+      var betResponse= sinon.stub();
+      view.games.makeBet = betResponse;
+      betResponse.callsArg(1);
+      view.setBetVariable();
+      expect($('#betInput').is(':disabled')).to.be.true
+    });
+
+    it("doesn't disable the text box when a bet is unsuccessful", function() {
+      view.games = myGame;
+      view.setBetVariable();
+      expect($('#betInput').is(':disabled')).to.be.false
+    });
   });
 
   describe("#StandButton", function(){
@@ -243,6 +258,18 @@ describe("Game View", function() {
       view.standButtonFunction();
       expect($('#betButton').is(':disabled')).to.be.false
     });
+
+    it("enables the text box", function() {
+      view.games = myGame;
+      var betResponse= sinon.stub();
+      view.games.gameStand = betResponse;
+      betResponse.callsArg(0);
+      view.render();
+      $('#betInput').prop('disabled', true);
+      view.standButtonFunction();
+      expect($('#betInput').is(':disabled')).to.be.false
+    });
+
   });
 
   describe("#HitButton", function() {

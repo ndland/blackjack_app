@@ -46,6 +46,7 @@ blackjack.GameView = Backbone.View.extend({
       $('#betButton').prop('disabled', true);
       $('#hitButton').prop('disabled', false);
       $('#standButton').prop('disabled', false);
+      $('#betInput').prop('disabled', true);
     });
   },
 
@@ -63,6 +64,7 @@ blackjack.GameView = Backbone.View.extend({
       $('#betButton').prop('disabled', false)
       $('#hitButton').prop('disabled', true);
       $('#standButton').prop('disabled', true);
+      $('#betInput').prop('disabled', false);
     });
   }
 });
