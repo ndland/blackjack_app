@@ -69,7 +69,7 @@ describe Dealer do
 
     before do
       @user = Fabricate(:person, credits: 100)
-      @game =Fabricate(:game_list, bet_amount: 20)
+      @game = Fabricate(:game_list, bet_amount: 20)
       @user_card = Fabricate(:player_cards, faceValue:"A", game_id: @game.id)
       @dealer_card =Fabricate(:dealer_cards, faceValue:"3", game_id: @game.id)
     end
@@ -102,200 +102,193 @@ describe Dealer do
   describe "find_winner" do
     before do
       @user = Fabricate(:person, credits: 100)
-      @game =Fabricate(:game_list, bet_amount: 20)
+      @game1 = Fabricate(:game_list, bet_amount: 20)
+      @game = Fabricate(:game_list, table_id: 2, bet_amount: 20)
+      @user_card = Fabricate(:player_cards, faceValue:"A", game_id: @game.id)
+      @dealer_card =Fabricate(:dealer_cards, faceValue:"3", game_id: @game.id)
+      Fabricate(:player_cards, faceValue: "K", game_id: @game1.id)
+      Fabricate(:player_cards, faceValue: "7", game_id: @game1.id)
+      Fabricate(:dealer_cards, faceValue: "K", game_id: @game1.id)
     end
 
     it "should have a method find_winner" do
-      @user_card = Fabricate(:player_cards, faceValue:"A", game_id: @game.id)
-      @dealer_card =Fabricate(:dealer_cards, faceValue:"3", game_id: @game.id)
       subject.find_winner(@game.id)
     end
 
     it "should create a new winner in the table" do
-      @user_card = Fabricate(:player_cards, faceValue:"A", game_id: @game.id)
-      @dealer_card =Fabricate(:dealer_cards, faceValue:"3", game_id: @game.id)
       subject.find_winner(@game.id)
       Winner.count.should eq(1)
     end
 
-  #     it "should create a new winner with a game_id" do
-  #       @card6 = Fabricate(:player_cards, faceValue:"Q", game_id: 42)
-  #       @card7 = Fabricate(:player_cards, faceValue:"3", game_id: 42)
-      # subject.find_winner(@game.id)
-  #       Winner.first.game_id.should eq(42)
-  #     end
+    it "should create a new winner with a game_id" do
+      subject.find_winner(@game.id)
+      Winner.first.game_id.should eq(@game.id)
+    end
 
-  #     it "should create a new winner in the table with the correct game_id" do
-  #       @card6 = Fabricate(:player_cards, faceValue:"Q", game_id: 2)
-  #       Fabricate(:player_cards, faceValue:"Q", game_id: 2)
-  #       @card7 = Fabricate(:dealer_cards, faceValue:"3", game_id: 2)
-  #       Fabricate(:dealer_cards, faceValue:"3", game_id: 2)
-      # subject.find_winner(@game.id)
-  #       Winner.first.game_id.should eq(2)
-  #     end
+    it "player wins if players card value is 17 and dealers card value is 15" do
+      Fabricate(:dealer_cards, faceValue: "5", game_id: @game1.id)
+      subject.find_winner(@game1.id)
+      Winner.first.outcome.should eq("Player is the Winner")
+    end
+
+    it "dealer wins if players card value is 17 and dealers card value is 19" do
+      Fabricate(:dealer_cards, faceValue: "9", game_id: @game1.id)
+      subject.find_winner(@game1.id)
+      Winner.first.outcome.should eq("Dealer is the Winner")
+    end
+
+    it "player wins if players cards value is 17 and dealers cards are 22" do
+      Fabricate(:dealer_cards, faceValue: "K", game_id: @game1.id)
+      Fabricate(:dealer_cards, faceValue: "2", game_id: @game1.id)
+      subject.find_winner(@game1.id)
+      Winner.first.outcome.should eq("Player is the Winner")
+    end
+
+    it "returns 'No Winner' if the player and the dealer have the same score" do
+      Fabricate(:dealer_cards, faceValue: "7", game_id: @game1.id)
+      subject.find_winner(@game1.id)
+      Winner.first.outcome.should eq("No Winner: game was a push")
+    end
+
+    it "calls pay_player when the player wins" do
+      Fabricate(:dealer_cards, faceValue: "K", game_id: @game1.id)
+      Fabricate(:dealer_cards, faceValue: "2", game_id: @game1.id)
+      subject.find_winner(@game1.id)
+      @user.reload
+      @user.credits.should eq(140)
+    end
+
+    it "calls pay_player with game_id, and 1 when the game is a push" do
+      Fabricate(:dealer_cards, faceValue: "7", game_id: @game1.id)
+      subject.find_winner(@game1.id)
+      @user.reload
+      @user.credits.should eq(120)
+    end
   end
-  #     it "player wins if players card value is 17 and dealers card value is 15" do
-  #       # Fabricate(:game_list, id: 7, bet_amount: 20)
-  #       Fabricate(:player_cards, faceValue: "K", game_id: 7)
-  #       Fabricate(:player_cards, faceValue: "7", game_id: 7)
-  #       Fabricate(:dealer_cards, faceValue: "K", game_id: 7)
-  #       Fabricate(:dealer_cards, faceValue: "5", game_id: 7)
-      # subject.find_winner(@game.id)
-  #       Winner.first.outcome.should eq("Player is the Winner")
-  #     end
 
-  #     it "dealer wins if players card value is 17 and dealers card value is 19" do
-  #       Fabricate(:player_cards, faceValue: "K", game_id: 7)
-  #       Fabricate(:player_cards, faceValue: "7", game_id: 7)
-  #       Fabricate(:dealer_cards, faceValue: "K", game_id: 7)
-  #       Fabricate(:dealer_cards, faceValue: "9", game_id: 7)
-      # subject.find_winner(@game.id)
-  #       Winner.first.outcome.should eq("Dealer is the Winner")
-  #     end
+  describe "checkOver21" do
 
-  #     it "player wins if players cards value is 17 and dealers cards are 22" do
-  #       # Fabricate(:game_list, id: 7, bet_amount: 20)
-  #       Fabricate(:player_cards, faceValue: "K", game_id: 7)
-  #       Fabricate(:player_cards, faceValue: "7", game_id: 7)
-  #       Fabricate(:dealer_cards, faceValue: "K", game_id: 7)
-  #       Fabricate(:dealer_cards, faceValue: "K", game_id: 7)
-  #       Fabricate(:dealer_cards, faceValue: "2", game_id: 7)
-      # subject.find_winner(@game.id)
-  #       Winner.first.outcome.should eq("Player is the Winner")
-  #     end
+    it "should return 0 if the card total is over 21" do
+      subject.checkOver21(42).should eq(0)
+    end
 
-  #     it "returns 'No Winner' if the player and the dealer have the same score" do
-  #       Fabricate(:player_cards, faceValue: "K", game_id: 7)
-  #       Fabricate(:player_cards, faceValue: "7", game_id: 7)
-  #       Fabricate(:dealer_cards, faceValue: "K", game_id: 7)
-  #       Fabricate(:dealer_cards, faceValue: "7", game_id: 7)
-      # subject.find_winner(@game.id)
-  #       Winner.first.outcome.should eq("No Winner: game was a push")
-  #     end
+    it "should return 21 if the card total is 21" do
+      subject.checkOver21(21).should eq(21)
+    end
 
-  #     it "calls pay_player when the player wins" do
-  #       @game = Fabricate(:game_list, bet_amount: 20)
-  #       p Person.all
-  #       Fabricate(:player_cards, faceValue: "K", game_id: @game.id)
-  #       Fabricate(:player_cards, faceValue: "7", game_id: @game.id)
-  #       Fabricate(:dealer_cards, faceValue: "K", game_id: @game.id)
-  #       Fabricate(:dealer_cards, faceValue: "K", game_id: @game.id)
-  #       Fabricate(:dealer_cards, faceValue: "2", game_id: @game.id)
-  #       subject.find_winner(@game.id)
-  #       @user.reload
-  #       @user.credits.should eq(140)
-  #     end
+    it "should return the card total if the card total is under 21" do
+      subject.checkOver21(11).should eq(11)
+    end
+  end
 
-  #     describe "checkOver21" do
-  #       it "should return 0 if the card total is over 21" do
-  #         subject.checkOver21(42).should eq(0)
-  #       end
+  describe "adding up the faceValue_total of the hand" do
+    before do
+      Fabricate(:dealer_cards, faceValue: "2", suit: "int")
+      Fabricate(:dealer_cards, faceValue: "3", suit: "int")
+      Fabricate(:dealer_cards, faceValue: "J")
+      Fabricate(:dealer_cards, faceValue: "K")
+      Fabricate(:dealer_cards, faceValue: "Q")
+      Fabricate(:dealer_cards, faceValue: "A")
+    end
 
-  #       it "should return 21 if the card total is 21" do
-  #         subject.checkOver21(21).should eq(21)
-  #       end
+    it "should have a method faceValue_total(cards)" do
+      @cards  = DealerCards.find(:all);
+      subject.faceValue_total(@cards)
+    end
 
-  #       it "should return the card total if the card total is under 21" do
-  #         subject.checkOver21(11).should eq(11)
-  #       end
-  #     end
-  #   end
+    it "should return the value of 2" do
+      @cards  = DealerCards.find(:all, conditions:{faceValue: "2"});
+      subject.faceValue_total(@cards).should eq(2)
+    end
 
-  #   describe "adding up the faceValue_total of the hand" do
-  #     it "should have a method faceValue_total(cards)" do
-  #       @cards  = DealerCards.find(:all, conditions:{game_id: 42});
-  #       subject.faceValue_total(@cards)
-  #     end
+    it "should return the value of 2 cards" do
+      @cards  = DealerCards.find(:all, conditions:{suit: "int"});
+      subject.faceValue_total(@cards).should eq(5)
+    end
 
-  #     it "should return the value of 2" do
-  #       @cards  = DealerCards.find(:all, conditions:{faceValue: "2"});
-  #       subject.faceValue_total(@cards).should eq(2)
-  #     end
+    it "should return the value of a Jack" do
+      @cards  = DealerCards.find(:all, conditions:{faceValue: "J"});
+      subject.faceValue_total(@cards).should eq(10)
+    end
 
-  #     it "should return the value of 2 cards" do
-  #       @cards  = DealerCards.find(:all, conditions:{suit: "int"});
-  #       subject.faceValue_total(@cards).should eq(5)
-  #     end
+    it "should return the value of a Queen" do
+      @cards  = DealerCards.find(:all, conditions:{faceValue: "Q"});
+      subject.faceValue_total(@cards).should eq(10)
+    end
 
-  #     it "should return the value of a Jack" do
-  #       @cards  = DealerCards.find(:all, conditions:{faceValue: "J"});
-  #       subject.faceValue_total(@cards).should eq(10)
-  #     end
+    it "should return the value of a King" do
+      @cards  = DealerCards.find(:all, conditions:{faceValue: "K"});
+      subject.faceValue_total(@cards).should eq(10)
+    end
 
-  #     it "should return the value of a Queen" do
-  #       @cards  = DealerCards.find(:all, conditions:{faceValue: "Q"});
-  #       subject.faceValue_total(@cards).should eq(10)
-  #     end
+    it "should return the value of Ace as 11 when value is under 21" do
+      @cards  = DealerCards.find(:all, conditions:{faceValue: "A"});
+      subject.faceValue_total(@cards).should eq(11)
+    end
 
-  #     it "should return the value of a King" do
-  #       @cards  = DealerCards.find(:all, conditions:{faceValue: "K"});
-  #       subject.faceValue_total(@cards).should eq(10)
-  #     end
+    it "should return the value of Ace as 1 when value is greater than equal 11" do
+      @cards  = DealerCards.find(:all);
+      subject.faceValue_total(@cards).should eq(36)
+    end
+  end
 
-  #     it "should return the value of Ace as 11 when value is under 21" do
-  #       @cards  = DealerCards.find(:all, conditions:{faceValue: "A"});
-  #       subject.faceValue_total(@cards).should eq(11)
-  #     end
+  describe "#new_hand" do
+    before do
+      @card = Fabricate (:card)
+    end
 
-  #     it "should return the value of Ace as 1 when value is greater than equal 11" do
-  #       @cards  = DealerCards.find(:all, conditions:{game_id: 42});
-  #       subject.faceValue_total(@cards).should eq(36)
-  #     end
-  #   end
-  # end
+    it "should have a method new_hand" do
+      subject.new_hand(3)
+    end
 
-  # describe "#new_hand" do
+    it "gets two cards for the dealer and the player" do
+      subject.new_hand(3)
+      DealerCards.count.should eq(2)
+      PlayerCards.count.should eq(2)
+    end
 
-  #   before do
-  #     @card = Fabricate (:card)
-  #   end
+    it "deletes the old hand and deals the new hand to the player and dealer" do
+      Fabricate(:dealer_cards, game_id: 2);
+      Fabricate(:player_cards, game_id: 2);
+      subject.new_hand(2)
+      DealerCards.count.should eq(2)
+      PlayerCards.count.should eq(2)
+    end
 
-  #   it "should have a method new_hand" do
-  #     subject.new_hand(3)
-  #   end
+    it "refreshes the winner after each hand" do
+      Fabricate(:winner, game_id: 2)
+      subject.new_hand(2)
+      Winner.count.should eq(0)
+    end
 
-  #   it "gets two cards for the dealer and the player" do
-  #     subject.new_hand(3)
-  #     DealerCards.count.should eq(2)
-  #     PlayerCards.count.should eq(2)
-  #   end
+    it "only deletes the winner of current game" do
+      Fabricate(:winner, game_id: 2)
+      Fabricate(:winner, game_id: 42)
+      subject.new_hand(2)
+      Winner.count.should eq(1)
+    end
+  end
 
-  #   it "deletes the old hand and deals the new hand to the player and dealer" do
-  #     Fabricate(:dealer_cards, game_id: 2);
-  #     Fabricate(:player_cards, game_id: 2);
-  #     subject.new_hand(2)
-  #     DealerCards.count.should eq(2)
-  #     PlayerCards.count.should eq(2)
-  #   end
+  describe "#pay_player" do
+    before do
+      @user = Fabricate(:person, credits: 100)
+      @game = Fabricate(:game_list, bet_amount: 20)
+    end
 
-  #   it "refreshes the winner after each hand" do
-  #     Fabricate(:winner, game_id: 2)
-  #     subject.new_hand(2)
-  #     Winner.count.should eq(0)
-  #   end
+    it "has a method 'pay_player'" do
+      subject.pay_player(@game.id, 1)
+    end
 
-  #   it "only deletes the winner of current game" do
-  #     Fabricate(:winner, game_id: 2)
-  #     Fabricate(:winner, game_id: 42)
-  #     subject.new_hand(2)
-  #     Winner.count.should eq(1)
-  #   end
-  # end
+    it "doubles a players bet in credits" do
+      subject.pay_player(@game.id, 2)
+      @user.reload
+      @user.credits.should eq(140)
+    end
 
-  # describe "#pay_player" do
-
-  #   it "has a method 'pay_player'" do
-  #     @user = Fabricate(:person, credits: 100)
-  #     @game = Fabricate(:game_list, bet_amount: 20)
-  #     subject.pay_player(@game.id)
-  #   end
-
-  #   it "doubles a players bet in credits" do
-  #     @user = Fabricate(:person, credits: 100)
-  #     @game = Fabricate(:game_list, bet_amount: 20)
-  #     subject.pay_player(@game.id)
-  #     @user.reload
-  #     @user.credits.should eq(140)
-  #   end
-  # end
+    it "returns the users bet if the game is a push" do
+      subject.pay_player(@game.id, 1)
+      @user.reload
+      @user.credits.should eq(120)
+    end
+  end
 end

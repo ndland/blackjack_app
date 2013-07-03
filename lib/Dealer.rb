@@ -68,9 +68,10 @@ class Dealer
     outcome = "Dealer is the Winner"
 
     if @player_cards_total > @dealer_cards_total
-      pay_player(game_id)
+      pay_player(game_id, 2)
       outcome = "Player is the Winner"
     elsif @player_cards_total == @dealer_cards_total
+      pay_player(game_id, 1)
       outcome = "No Winner: game was a push"
     end
     Winner.create(outcome: outcome, game_id: game_id)
@@ -87,10 +88,10 @@ class Dealer
     return model.find(:all, conditions:{game_id: game_id})
   end
 
-  def pay_player(game_id)
+  def pay_player(game_id, payback_ratio)
     user = Person.first
     payout = GameList.find(:first, conditions: { id: game_id })
-    winnings = payout.bet_amount * 2
+    winnings = payout.bet_amount * payback_ratio
     user.credits += winnings
     user.save
   end
