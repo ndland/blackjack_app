@@ -247,32 +247,10 @@ describe("Game View", function() {
 
       standFactoryMock.verify();
     });
-
-    it("re-enables the bet button", function() {
-      view.games = myGame;
-      var betResponse= sinon.stub();
-      view.games.gameStand = betResponse;
-      betResponse.callsArg(0);
-      view.render();
-      $('#betButton').prop('disabled', true);
-      view.standButtonFunction();
-      expect($('#betButton').is(':disabled')).to.be.false
-    });
-
-    it("enables the text box", function() {
-      view.games = myGame;
-      var betResponse= sinon.stub();
-      view.games.gameStand = betResponse;
-      betResponse.callsArg(0);
-      view.render();
-      $('#betInput').prop('disabled', true);
-      view.standButtonFunction();
-      expect($('#betInput').is(':disabled')).to.be.false
-    });
-
   });
 
   describe("#HitButton", function() {
+
     it ("should call the hitButtonfunction", function() {
       view.games = myGame
       view.CardsView = {render:function() {}}
@@ -300,29 +278,13 @@ describe("Game View", function() {
 
       hitFactoryMock.verify();
     });
-
-    //TODO - ask tony
-    // it("hitButtonFunction re-renders the page once it gets a callback", function(){
-    //    var myGame = new blackjack.Game({id: 42});
-    //    var myUser = new blackjack.User({id: 19});
-    //    var view = new blackjack.GameView();
-    //    view.games = myGame;
-    //    view.user = myUser;
-    //    view.games.gameHit = sinon.stub().returns();
-    //    view.render = sinon.spy()
-
-    //    //invoke
-    //    view.hitButtonFunction();
-
-
-    //    //expect
-    //    sinon.assert.calledOnce(view.render);
-    // });
   });
 });
 
 describe("WinnersView", function() {
   beforeEach(function() {
+    $("body").append('<section id = "game"> </section>');
+    $("body").append('<script id="game-template" type="text/x-handlebars-template"> <button id="standButton">stand</button> <button id="hitButton">hit</button> <button id="betButton">bet</button> <input type="text" id="betInput" size="5">  </script>');
     this.subject = new blackjack.WinnersView();
   });
 
@@ -380,15 +342,20 @@ describe("WinnersView", function() {
   });
 
   describe("#display function", function(){
+    beforeEach(function() {
+      $("body").append('<section id = "winner"></section>');
+      $("body").append('<section id = "game"> </section>');
+      $("body").append('<script id="game-template" type="text/x-handlebars-template"> <button id="betButton">bet</button> <input type="text" id="betInput" size="5">  </script>');
+      $("body").append('<script id = "winner-template" type="text/x-handlebars-template"> <div id="winner">{{this.outcome}}</div> </script>');
+      view = new blackjack.GameView();
+      this.subject.winner = new Backbone.Model();
+    });
 
     it("should exist", function() {
       expect(this.subject.displayWinner).to.exist;
     });
 
     it("should display the winner of the hand if player wins", function() {
-      $("body").append('<section id = "winner"></section>');
-      $("body").append('<script id = "winner-template" type="text/x-handlebars-template"> <div id="winner">{{this.outcome}}</div> </script>');
-      this.subject.winner = new Backbone.Model();
       this.subject.winner
       .set({outcome: "Player Wins"});
 
@@ -399,9 +366,6 @@ describe("WinnersView", function() {
     });
 
     it("should display the winner of the hand if dealer wins", function() {
-      $("body").append('<section id = "winner"></section>');
-      $("body").append('<script id = "winner-template" type="text/x-handlebars-template"> <div id="winner">{{this.outcome}}</div> </script>');
-      this.subject.winner = new Backbone.Model();
       this.subject.winner
       .set({outcome: "Dealer Wins"});
 
@@ -409,6 +373,42 @@ describe("WinnersView", function() {
 
       var winner = $('#winner').text();
       assert.equal(winner, ' Dealer Wins ');
+    });
+
+    it("enables the bet button after a winner has been displayed", function() {
+      $('#betButton').prop('disabled', true);
+      this.subject.winner
+      .set({outcome: "Dealer Wins"});
+
+      this.subject.displayWinner();
+      expect($('#betButton').is(':disabled')).to.be.false;
+    });
+
+    it("disables the hit button after a winner has been displayed", function() {
+      $('#hitButton').prop('disabled', false);
+      this.subject.winner
+      .set({outcome: "Dealer Wins"});
+
+      this.subject.displayWinner();
+      expect($('#hitButton').is(':disabled')).to.be.true;
+    });
+
+    it("enables the text box after a winner has been displayed", function() {
+      $('#betInput').prop('disabled', true);
+      this.subject.winner
+      .set({outcome: "Dealer Wins"});
+
+      this.subject.displayWinner();
+      expect($('#betInput').is(':disabled')).to.be.false;
+    });
+
+    it("disables the stand button after a winner has been displayed", function() {
+      $('#standButton').prop('disabled', false);
+      this.subject.winner
+      .set({outcome: "Dealer Wins"});
+
+      this.subject.displayWinner();
+      expect($('#standButton').is(':disabled')).to.be.true;
     });
   });
 });

@@ -22,6 +22,8 @@ class Dealer
     if @player_cards_hand == [] || faceValue_total(@player_cards_hand) < 21
       newCard = card.get_card
       PlayerCards.create(suit: newCard.suit, faceValue: newCard.faceValue, game_id: game_id)
+    else
+      play(game_id)
     end
   end
 

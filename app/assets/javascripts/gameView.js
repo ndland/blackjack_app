@@ -61,10 +61,6 @@ blackjack.GameView = Backbone.View.extend({
     var that = this;
     this.games.gameStand(function() {
       that.render();
-      $('#betButton').prop('disabled', false)
-      $('#hitButton').prop('disabled', true);
-      $('#standButton').prop('disabled', true);
-      $('#betInput').prop('disabled', false);
     });
   }
 });

@@ -39,9 +39,18 @@ describe Dealer do
         Fabricate(:player_cards, faceValue: "K", game_id: 41)
         Fabricate(:player_cards, faceValue: "K", game_id: 41)
         Fabricate(:player_cards, faceValue: "2", game_id: 41)
-        subject.card = stub('Card', :get_card => @card)
+        Fabricate(:dealer_cards, faceValue: "K", game_id: 41)
         subject.deal_player_card(41)
         PlayerCards.count.should eq(3)
+     end
+
+     it "should call play if Player's Cards value is over 21" do
+        Fabricate(:player_cards, faceValue: "K", game_id: 41)
+        Fabricate(:player_cards, faceValue: "K", game_id: 41)
+        Fabricate(:player_cards, faceValue: "2", game_id: 41)
+        Fabricate(:dealer_cards, faceValue: "K", game_id: 41)
+        subject.deal_player_card(41)
+        Winner.count.should eq(1)
      end
     end
 
